@@ -4,17 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Áreas Disponíveis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
     }
 
     body {
       background: #fff7f0;
       color: #333;
+      font-family: Arial, sans-serif;
     }
 
     #loader {
@@ -36,7 +39,7 @@
       width: 50px;
       height: 50px;
       border: 6px solid white;
-      border-top: 6px solid rgba(255,255,255,0.3);
+      border-top: 6px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: 10px;
@@ -62,11 +65,33 @@
       font-weight: normal;
     }
 
+    .controls-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #searchInput {
+      width: 280px;
+      max-width: 90%;
+      padding: 10px 14px;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 14px;
+      color: #333;
+    }
+
     .header-controls label {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       cursor: pointer;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.3px;
     }
 
     .container {
@@ -80,7 +105,7 @@
       background: white;
       border-radius: 12px;
       padding: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
       transition: transform 0.2s;
     }
 
@@ -111,17 +136,9 @@
       text-align: center;
       color: #777;
       font-size: 15px;
+      grid-column: 1 / -1;
     }
-  
-    /* Checkbox font improvement */
-    .header-controls label {
-      font-family: 'Poppins', Arial, sans-serif;
-      font-size: 15px;
-      letter-spacing: 0.3px;
-    }
-
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <div id="loader">
@@ -132,13 +149,8 @@
   <header>
     Áreas Disponíveis para Registro
     <div class="header-controls">
-      <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Pesquisar área..."
-          style="width:280px; max-width:90%; padding:10px 14px; border:none; outline:none; border-radius:10px; font-family:'Poppins', Arial, sans-serif; font-size:14px; color:#333;"
-        >
+      <div class="controls-stack">
+        <input type="text" id="searchInput" placeholder="Pesquisar área...">
         <label>
           <input type="checkbox" id="onlyAvailable" checked>
           Mostrar apenas áreas disponíveis
@@ -156,12 +168,13 @@
       const card = document.createElement('div');
       card.className = 'card';
       card.dataset.status = status;
+      card.dataset.city = city.toLowerCase();
 
       const title = document.createElement('h3');
       title.textContent = city;
 
       const statusEl = document.createElement('p');
-      statusEl.className = `status ${status}`;
+      statusEl.className = 'status ' + status;
       statusEl.textContent = status === 'open' ? 'Disponível' : 'Indisponível';
 
       card.appendChild(title);
@@ -178,14 +191,12 @@
 
       cards.forEach((card) => {
         const isAvailable = card.dataset.status === 'open';
-        const cityName = card.querySelector('h3')?.textContent.toLowerCase() || '';
-
+        const cityName = card.dataset.city || '';
         const matchesAvailability = !showOnlyAvailable || isAvailable;
         const matchesSearch = cityName.includes(search);
 
         card.style.display = matchesAvailability && matchesSearch ? 'block' : 'none';
       });
-    });
     }
 
     async function loadCities() {
@@ -200,17 +211,21 @@
         const text = await response.text();
         const lines = text
           .split('\n')
-          .map(line => line.trim())
-          .filter(line => line.length > 0);
+          .map((line) => line.trim())
+          .filter((line) => line.length > 0);
 
         container.innerHTML = '';
 
         lines.forEach((line) => {
-          const [cityRaw, statusRaw] = line.split('|');
-          const city = (cityRaw || '').trim();
-          const status = ((statusRaw || 'open').trim().toLowerCase() === 'closed') ? 'closed' : 'open';
+          const parts = line.split('|');
+          const city = (parts[0] || '').trim();
+          const normalizedStatus = (parts[1] || 'open').trim().toLowerCase();
+          const status = normalizedStatus === 'closed' ? 'closed' : 'open';
 
-          if (!city) return;
+          if (!city) {
+            return;
+          }
+
           container.appendChild(createCard(city, status));
         });
 
@@ -225,17 +240,82 @@
       } finally {
         const loader = document.getElementById('loader');
         setTimeout(() => {
-          loader.style.opacity = '0';
-          setTimeout(() => {
-            loader.remove();
-          }, 500);
+          if (loader) {
+            loader.style.opacity = '0';
+            setTimeout(() => {
+              loader.remove();
+            }, 500);
+          }
         }, 2000);
       }
     }
 
+    function runBasicChecks() {
+      console.assert(typeof createCard === 'function', 'createCard deve existir');
+      console.assert(typeof applyFilter === 'function', 'applyFilter deve existir');
+      console.assert(typeof loadCities === 'function', 'loadCities deve existir');
+
+      const testCard = createCard('Cidade Teste', 'open');
+      console.assert(testCard.classList.contains('card'), 'O card deve ter a classe card');
+      console.assert(testCard.dataset.status === 'open', 'O status do card deve ser open');
+      console.assert(testCard.dataset.city === 'cidade teste', 'O dataset city deve ser normalizado');
+      console.assert(testCard.querySelector('h3').textContent === 'Cidade Teste', 'O título da cidade deve ser renderizado');
+      console.assert(testCard.querySelector('.status').textContent === 'Disponível', 'O texto de status deve ser renderizado');
+
+      const testContainer = document.createElement('div');
+      testContainer.appendChild(createCard('São Paulo', 'open'));
+      testContainer.appendChild(createCard('Rio de Janeiro', 'closed'));
+      document.body.appendChild(testContainer);
+
+      const tempCheckbox = document.createElement('input');
+      tempCheckbox.type = 'checkbox';
+      tempCheckbox.id = 'onlyAvailable';
+      tempCheckbox.checked = true;
+
+      const tempSearch = document.createElement('input');
+      tempSearch.type = 'text';
+      tempSearch.id = 'searchInput';
+      tempSearch.value = 'são';
+
+      const originalCheckbox = document.getElementById('onlyAvailable');
+      const originalSearch = document.getElementById('searchInput');
+
+      if (originalCheckbox) {
+        originalCheckbox.id = 'onlyAvailable_original';
+      }
+      if (originalSearch) {
+        originalSearch.id = 'searchInput_original';
+      }
+
+      document.body.appendChild(tempCheckbox);
+      document.body.appendChild(tempSearch);
+
+      applyFilter();
+
+      const tempCards = testContainer.querySelectorAll('.card');
+      console.assert(tempCards[0].style.display === 'block', 'Cidade disponível e compatível com busca deve aparecer');
+      console.assert(tempCards[1].style.display === 'none', 'Cidade indisponível deve ser ocultada quando checkbox estiver marcado');
+
+      tempCheckbox.remove();
+      tempSearch.remove();
+      testContainer.remove();
+
+      if (originalCheckbox) {
+        originalCheckbox.id = 'onlyAvailable';
+      }
+      if (originalSearch) {
+        originalSearch.id = 'searchInput';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('onlyAvailable').addEventListener('change', applyFilter);
-      document.getElementById('searchInput').addEventListener('input', applyFilter);
+      const onlyAvailable = document.getElementById('onlyAvailable');
+      const searchInput = document.getElementById('searchInput');
+
+      onlyAvailable.addEventListener('change', applyFilter);
+      searchInput.addEventListener('input', applyFilter);
+
+      runBasicChecks();
       loadCities();
     });
   </script>
