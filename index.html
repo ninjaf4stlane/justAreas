@@ -85,23 +85,17 @@
 
 <header>
   Áreas Disponíveis para Registro
-  <div style="margin-top:15px; display:flex; justify-content:center;">
-    <input id="searchInput" type="text" placeholder="Pesquisar área..." style="padding:10px; border:none; border-radius:10px; width:250px;">
-    <label style="margin-left:10px; font-size:14px; color:white;">
-      <input type="checkbox" id="hideClosed"> Ocultar indisponíveis
-    </label>
-  </div>
 </header>
 
 <div class="container">
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
-  <div class="card" data-name="$1"><h3>$1</h3><p class="status $2">$3</p></div>
+  <div class="card"><h3>São Paulo</h3><p class="status open">Disponível</p></div>
+  <div class="card"><h3>Rio de Janeiro</h3><p class="status closed">Indisponível</p></div>
+  <div class="card"><h3>Belo Horizonte</h3><p class="status open">Disponível</p></div>
+  <div class="card"><h3>Curitiba</h3><p class="status open">Disponível</p></div>
+  <div class="card"><h3>Porto Alegre</h3><p class="status closed">Indisponível</p></div>
+  <div class="card"><h3>Salvador</h3><p class="status open">Disponível</p></div>
+  <div class="card"><h3>Fortaleza</h3><p class="status open">Disponível</p></div>
+  <div class="card"><h3>Recife</h3><p class="status closed">Indisponível</p></div>
 </div>
 
 <script>
@@ -118,33 +112,6 @@ window.addEventListener("load",()=>{
 
   },2000);
 });
-
-
-const searchInput = document.getElementById("searchInput");
-const cards = document.querySelectorAll(".card");
-const hideClosed = document.getElementById("hideClosed");
-
-function filterCards() {
-  const value = searchInput.value.toLowerCase();
-  const hide = hideClosed.checked;
-
-  cards.forEach(card => {
-    const name = card.dataset.name.toLowerCase();
-    const isClosed = card.querySelector(".status").classList.contains("closed");
-
-    let show = true;
-
-    if (!name.includes(value)) show = false;
-    if (hide && isClosed) show = false;
-
-    card.style.display = show ? "block" : "none";
-  });
-}
-
-searchInput.addEventListener("input", filterCards);
-hideClosed.addEventListener("change", filterCards);
-});
-
 </script>
 
 </body>
