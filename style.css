@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Sofia+Sans&display=swap");
+
+* {
+  font-family: "Sofia sans", Arial, Helvetica, sans-serif;
+  color: #fff;
+}
+
+body {
+  background-color: #0065c3;
+  position: relative;
+  padding: 20px 100px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+li {
+  list-style: none;
+  display: inline-block;
+  margin-left: 30px;
+  font-size: 25px;
+}
+
+.logo {
+  max-width: 80px;
+}
+
+.container {
+  display: inline-flex;
+  margin-top: 100px;
+}
+
+h1 {
+  font-size: 6rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.left {
+  float: left;
+  width: 50%;
+  margin-top: 0px;
+}
+
+.left > p {
+  font-size: 30px;
+  width: 90%;
+}
+
+.right {
+  position: absolute;
+  left: 1300px;
+}
+
+.container > img {
+  height: 850px;
+}
+
+.container > .content p {
+  width: 60%;
+}
+
+.container > .content h1 {
+  width: 50%;
+}
+
+button {
+  padding: 15px 40px;
+  color: #000;
+  text-transform: uppercase;
+  font-weight: 800;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+
+footer {
+  text-align: center;
+  margin-top: 50px;
+  bottom: 0;
+}
