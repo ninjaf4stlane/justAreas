@@ -87,30 +87,48 @@
   Áreas Disponíveis para Registro
 </header>
 
-<div class="container">
-  <div class="card"><h3>São Paulo</h3><p class="status open">Disponível</p></div>
-  <div class="card"><h3>Rio de Janeiro</h3><p class="status closed">Indisponível</p></div>
-  <div class="card"><h3>Belo Horizonte</h3><p class="status open">Disponível</p></div>
-  <div class="card"><h3>Curitiba</h3><p class="status open">Disponível</p></div>
-  <div class="card"><h3>Porto Alegre</h3><p class="status closed">Indisponível</p></div>
-  <div class="card"><h3>Salvador</h3><p class="status open">Disponível</p></div>
-  <div class="card"><h3>Fortaleza</h3><p class="status open">Disponível</p></div>
-  <div class="card"><h3>Recife</h3><p class="status closed">Indisponível</p></div>
+<div class="container" id="container">
+  <!-- Cards serão carregados aqui dinamicamente -->
 </div>
 
 <script>
-window.addEventListener("load",()=>{
-  const loader=document.getElementById("loader");
+// Função para carregar cidades de um arquivo de texto no GitHub
+async function loadCities() {
+  try {
+    // Substitua essa URL pelo raw link do seu arquivo de texto no GitHub
+    const response = await fetch('https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt');
+    const text = await response.text();
+    const lines = text.split('\n').filter(line => line.trim() !== '');
 
-  setTimeout(()=>{
-    loader.style.opacity="0";
-    loader.style.transition="0.5s";
+    const container = document.getElementById('container');
+    container.innerHTML = ''; // limpa antes de adicionar
 
-    setTimeout(()=>{
-      loader.remove();
-    },500);
+    lines.forEach(line => {
+      // Cada linha pode ter 'Cidade|status' (ex: São Paulo|open)
+      const parts = line.split('|');
+      const city = parts[0].trim();
+      const status = (parts[1] || 'open').trim();
 
-  },2000);
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<h3>${city}</h3><p class='status ${status}'>${status === 'open' ? 'Disponível' : 'Indisponível'}</p>`;
+
+      container.appendChild(card);
+    });
+  } catch(err) {
+    console.error('Erro ao carregar cidades:', err);
+  }
+}
+
+window.addEventListener('load', () => {
+  const loader = document.getElementById('loader');
+  loadCities();
+
+  setTimeout(() => {
+    loader.style.opacity = '0';
+    loader.style.transition = '0.5s';
+    setTimeout(() => loader.remove(), 500);
+  }, 2000);
 });
 </script>
 
