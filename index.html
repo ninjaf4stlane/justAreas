@@ -5,155 +5,213 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Áreas Disponíveis</title>
   <style>
-    * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-    body { background:#fff7f0; color:#333; }
+    body {
+      background: #fff7f0;
+      color: #333;
+    }
 
-    /* LOADER */
     #loader {
-      position:fixed;
-      width:100%;
-      height:100vh;
-      background:#ff7a00;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      color:white;
-      z-index:9999;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100vh;
+      background: #ff7a00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
     }
 
     .wheel {
-      width:50px;
-      height:50px;
-      border:6px solid white;
-      border-top:6px solid rgba(255,255,255,0.3);
-      border-radius:50%;
-      animation:spin 1s linear infinite;
-      margin-bottom:10px;
+      width: 50px;
+      height: 50px;
+      border: 6px solid white;
+      border-top: 6px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 10px;
     }
 
     @keyframes spin {
-      0% { transform:rotate(0deg);} 
-      100% { transform:rotate(360deg);} 
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     header {
-      background:linear-gradient(90deg,#ff7a00,#ff9a3c);
-      padding:20px;
-      text-align:center;
-      color:white;
-      font-size:22px;
-      font-weight:bold;
+      background: linear-gradient(90deg, #ff7a00, #ff9a3c);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .header-controls {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: normal;
+    }
+
+    .header-controls label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
     }
 
     .container {
-      padding:30px;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:15px;
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
     }
 
     .card {
-      background:white;
-      border-radius:12px;
-      padding:15px;
-      box-shadow:0 4px 10px rgba(0,0,0,0.1);
-      transition:0.2s;
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
     }
 
-    .card:hover { transform:translateY(-5px); }
+    .card:hover {
+      transform: translateY(-5px);
+    }
 
     .card h3 {
-      color:#ff7a00;
-      margin-bottom:8px;
-      font-size:16px;
+      color: #ff7a00;
+      margin-bottom: 8px;
+      font-size: 16px;
     }
 
-    .status { font-size:13px; }
-    .open { color:green; }
-    .closed { color:red; }
+    .status {
+      font-size: 13px;
+    }
 
+    .open {
+      color: green;
+    }
+
+    .closed {
+      color: red;
+    }
+
+    .message {
+      padding: 30px;
+      text-align: center;
+      color: #777;
+      font-size: 15px;
+    }
   </style>
 </head>
 <body>
-
-<div id="loader">
-  <div class="wheel"></div>
-  <p>Carregando...</p>
-</div>
-
-<header>
-  Áreas Disponíveis para Registro
-  <div style="margin-top:12px; font-size:14px; font-weight:normal;">
-    <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
-      <input type="checkbox" id="onlyAvailable">
-      Mostrar apenas áreas disponíveis
-    </label>
+  <div id="loader">
+    <div class="wheel"></div>
+    <p>Carregando...</p>
   </div>
-</header>
 
-<div class="container" id="container">
-  <!-- Cards serão carregados aqui dinamicamente -->
-</div>
+  <header>
+    Áreas Disponíveis para Registro
+    <div class="header-controls">
+      <label>
+        <input type="checkbox" id="onlyAvailable">
+        Mostrar apenas áreas disponíveis
+      </label>
+    </div>
+  </header>
 
-<script>
-// Função para carregar cidades de um arquivo de texto no GitHub
-async function loadCities() {
-  try {
-    // Substitua essa URL pelo raw link do seu arquivo de texto no GitHub
-    const response = await fetch('https://raw.githubusercontent.com/ninjaf4stlane/justAreas/main/cidades.txt');
-    const text = await response.text();
-    const lines = text.split('\n').filter(line => line.trim() !== '');
+  <div class="container" id="container"></div>
 
-    const container = document.getElementById('container');
-    container.innerHTML = ''; // limpa antes de adicionar
+  <script>
+    const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/main/cidades.txt';
 
-    lines.forEach(line => {
-      // Cada linha pode ter 'Cidade|status' (ex: São Paulo|open)
-      const parts = line.split('|');
-      const city = parts[0].trim();
-      const status = (parts[1] || 'open').trim();
-
+    function createCard(city, status) {
       const card = document.createElement('div');
       card.className = 'card';
       card.dataset.status = status;
-      card.innerHTML = `<h3>${city}</h3><p class='status ${status}'>${status === 'open' ? 'Disponível' : 'Indisponível'}</p>`;
 
-      container.appendChild(card);
+      const title = document.createElement('h3');
+      title.textContent = city;
+
+      const statusEl = document.createElement('p');
+      statusEl.className = `status ${status}`;
+      statusEl.textContent = status === 'open' ? 'Disponível' : 'Indisponível';
+
+      card.appendChild(title);
+      card.appendChild(statusEl);
+      return card;
+    }
+
+    function applyFilter() {
+      const checkbox = document.getElementById('onlyAvailable');
+      const cards = document.querySelectorAll('.card');
+      const showOnlyAvailable = checkbox.checked;
+
+      cards.forEach((card) => {
+        const isAvailable = card.dataset.status === 'open';
+        card.style.display = showOnlyAvailable && !isAvailable ? 'none' : 'block';
+      });
+    }
+
+    async function loadCities() {
+      const container = document.getElementById('container');
+
+      try {
+        const response = await fetch(FILE_URL, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error('Não foi possível carregar o arquivo de cidades.');
+        }
+
+        const text = await response.text();
+        const lines = text
+          .split('\n')
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
+
+        container.innerHTML = '';
+
+        lines.forEach((line) => {
+          const [cityRaw, statusRaw] = line.split('|');
+          const city = (cityRaw || '').trim();
+          const status = ((statusRaw || 'open').trim().toLowerCase() === 'closed') ? 'closed' : 'open';
+
+          if (!city) return;
+          container.appendChild(createCard(city, status));
+        });
+
+        if (!container.children.length) {
+          container.innerHTML = '<div class="message">Nenhuma cidade encontrada no arquivo.</div>';
+        }
+
+        applyFilter();
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = '<div class="message">Erro ao carregar as cidades. Verifique a URL do arquivo .txt.</div>';
+      } finally {
+        const loader = document.getElementById('loader');
+        setTimeout(() => {
+          loader.style.opacity = '0';
+          setTimeout(() => {
+            loader.remove();
+          }, 500);
+        }, 2000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('onlyAvailable').addEventListener('change', applyFilter);
+      loadCities();
     });
-
-    applyFilter();
-  });
-  } catch(err) {
-    console.error('Erro ao carregar cidades:', err);
-  }
-}
-
-function applyFilter() {
-  const checkbox = document.getElementById('onlyAvailable');
-  const cards = document.querySelectorAll('.card');
-
-  cards.forEach(card => {
-    const isAvailable = card.dataset.status === 'open';
-    card.style.display = checkbox && checkbox.checked && !isAvailable ? 'none' : 'block';
-  });
-}
-
-window.addEventListener('load', () => {
-  const loader = document.getElementById('loader');
-  loadCities();
-
-  const checkbox = document.getElementById('onlyAvailable');
-  checkbox.addEventListener('change', applyFilter);
-
-  setTimeout(() => {
-    loader.style.opacity = '0';
-    loader.style.transition = '0.5s';
-    setTimeout(() => loader.remove(), 500);
-  }, 2000);
-});
-</script>
-
+  </script>
 </body>
 </html>
