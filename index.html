@@ -132,10 +132,18 @@
   <header>
     Áreas Disponíveis para Registro
     <div class="header-controls">
-      <label>
-        <input type="checkbox" id="onlyAvailable" checked>
-        Mostrar apenas áreas disponíveis
-      </label>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Pesquisar área..."
+          style="width:280px; max-width:90%; padding:10px 14px; border:none; outline:none; border-radius:10px; font-family:'Poppins', Arial, sans-serif; font-size:14px; color:#333;"
+        >
+        <label>
+          <input type="checkbox" id="onlyAvailable" checked>
+          Mostrar apenas áreas disponíveis
+        </label>
+      </div>
     </div>
   </header>
 
@@ -163,13 +171,21 @@
 
     function applyFilter() {
       const checkbox = document.getElementById('onlyAvailable');
+      const searchInput = document.getElementById('searchInput');
       const cards = document.querySelectorAll('.card');
       const showOnlyAvailable = checkbox.checked;
+      const search = searchInput.value.trim().toLowerCase();
 
       cards.forEach((card) => {
         const isAvailable = card.dataset.status === 'open';
-        card.style.display = showOnlyAvailable && !isAvailable ? 'none' : 'block';
+        const cityName = card.querySelector('h3')?.textContent.toLowerCase() || '';
+
+        const matchesAvailability = !showOnlyAvailable || isAvailable;
+        const matchesSearch = cityName.includes(search);
+
+        card.style.display = matchesAvailability && matchesSearch ? 'block' : 'none';
       });
+    });
     }
 
     async function loadCities() {
@@ -219,6 +235,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('onlyAvailable').addEventListener('change', applyFilter);
+      document.getElementById('searchInput').addEventListener('input', applyFilter);
       loadCities();
     });
   </script>
