@@ -1,41 +1,172 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pepsi Website</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&family=Sofia+Sans&display=swap" rel="stylesheet">
-    <link href="./style.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Áreas Disponíveis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #fff7f0;
+      color: #333;
+    }
+
+    /* LOADING SCREEN */
+    #loader {
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      background: #ff7a00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      flex-direction: column;
+      color: white;
+    }
+
+    .bike {
+      width: 60px;
+      height: 30px;
+      border-radius: 5px;
+      background: white;
+      position: relative;
+      animation: moveBike 2s linear infinite;
+    }
+
+    .bike::before,
+    .bike::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      width: 15px;
+      height: 15px;
+      background: black;
+      border-radius: 50%;
+    }
+
+    .bike::before { left: 5px; }
+    .bike::after { right: 5px; }
+
+    @keyframes moveBike {
+      0% { transform: translateX(-200px); }
+      100% { transform: translateX(200px); }
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(90deg, #ff7a00, #ff9a3c);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* CONTAINER */
+    .container {
+      padding: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    /* CARD */
+    .card {
+      background: white;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      color: #ff7a00;
+    }
+
+    .status {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .open { color: green; }
+    .closed { color: red; }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 10px;
+      background: #ff7a00;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #e56700;
+    }
+
+  </style>
 </head>
 <body>
-    
-    <div class="menu-bar">
-        <img src="./logo.png" alt="Pepsi-logo">
-        <ul>
-            <li>Home</li>
-            <li>Products</li>
-            <li>What's New</li>
-            <li>NewsLetter</li>
-            <li>Contact</li>
-        </ul>
-    </div>
-    <div class="container">
-        <div class="left">
-            <h1>That's What I like</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem, culpa unde! Placeat facere quod neque, ut corrupti laudantium inventore quibusdam magnam maiores voluptas et sed doloribus. Debitis iure officia quam?</p>
 
-            <button>view all products</button>
-        </div>
-        <div class="right">
-            <img src="./pepsi003.png" alt="pepsi can image"/>
-        </div>
-        
-        
-    </div>
-    <footer>
-        <p>&copy; Made by Anurag Kamble. All rights reserved.</p>
-    </footer>
+<div id="loader">
+  <div class="bike"></div>
+  <p>Carregando...</p>
+</div>
+
+<header>
+  Áreas Disponíveis para Registro
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h3>São Paulo - Centro</h3>
+    <p class="status open">Disponível</p>
+    <button>Registrar</button>
+  </div>
+
+  <div class="card">
+    <h3>Rio de Janeiro - Zona Sul</h3>
+    <p class="status closed">Indisponível</p>
+    <button disabled>Indisponível</button>
+  </div>
+
+  <div class="card">
+    <h3>Belo Horizonte</h3>
+    <p class="status open">Disponível</p>
+    <button>Registrar</button>
+  </div>
+
+  <div class="card">
+    <h3>Curitiba</h3>
+    <p class="status open">Disponível</p>
+    <button>Registrar</button>
+  </div>
+
+</div>
+
+<script>
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
+    loader.style.opacity = "0";
+    loader.style.transition = "opacity 0.5s ease";
+    setTimeout(() => loader.style.display = "none", 500);
+  });
+</script>
+
 </body>
 </html>
