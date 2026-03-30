@@ -74,16 +74,6 @@
     .open { color:green; }
     .closed { color:red; }
 
-    .empty-message {
-      grid-column: 1 / -1;
-      text-align:center;
-      background:white;
-      padding:20px;
-      border-radius:12px;
-      box-shadow:0 4px 10px rgba(0,0,0,0.08);
-      color:#777;
-    }
-
   </style>
 </head>
 <body>
@@ -95,13 +85,6 @@
 
 <header>
   Áreas Disponíveis para Registro
-  <div style="margin-top:15px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-    <input id="searchInput" type="text" placeholder="Pesquisar área..." style="padding:10px 12px; border:none; border-radius:10px; width:260px; outline:none;">
-    <label style="display:flex; align-items:center; gap:6px; font-size:14px; background:rgba(255,255,255,0.18); padding:10px 12px; border-radius:10px;">
-      <input type="checkbox" id="availableOnly">
-      Mostrar apenas disponíveis
-    </label>
-  </div>
 </header>
 
 <div class="container" id="container">
@@ -109,80 +92,43 @@
 </div>
 
 <script>
-let allCities = [];
-
-function renderCities() {
-  const container = document.getElementById('container');
-  const searchInput = document.getElementById('searchInput');
-  const availableOnly = document.getElementById('availableOnly');
-
-  const search = searchInput.value.trim().toLowerCase();
-  const onlyAvailable = availableOnly.checked;
-
-  const filtered = allCities.filter(item => {
-    const matchName = item.city.toLowerCase().includes(search);
-    const matchStatus = !onlyAvailable || item.status === 'open';
-    return matchName && matchStatus;
-  });
-
-  container.innerHTML = '';
-
-  if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty-message">Nenhuma área encontrada.</div>';
-    return;
-  }
-
-  filtered.forEach(item => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `<h3>${item.city}</h3><p class="status ${item.status}">${item.status === 'open' ? 'Disponível' : 'Indisponível'}</p>`;
-    container.appendChild(card);
-  });
-}
-
+// Função para carregar cidades de um arquivo de texto no GitHub
 async function loadCities() {
-  const container = document.getElementById('container');
-
   try {
-    const response = await fetch('./cidades.txt?ts=' + Date.now());
-
-    if (!response.ok) {
-      throw new Error('Arquivo cidades.txt não encontrado');
-    }
-
+    // Substitua essa URL pelo raw link do seu arquivo de texto no GitHub
+    const response = await fetch('https://raw.githubusercontent.com/ninjaf4stlane/justAreas/main/cidades.txt');
     const text = await response.text();
-    const lines = text.split('\n').filter(line => line.trim() !== '');.filter(line => line.trim() !== '');
+    const lines = text.split('\n').filter(line => line.trim() !== '');
 
-    allCities = lines.map(line => {
+    const container = document.getElementById('container');
+    container.innerHTML = ''; // limpa antes de adicionar
+
+    lines.forEach(line => {
+      // Cada linha pode ter 'Cidade|status' (ex: São Paulo|open)
       const parts = line.split('|');
-      return {
-        city: (parts[0] || '').trim(),
-        status: ((parts[1] || 'open').trim().toLowerCase() === 'closed') ? 'closed' : 'open'
-      };
-    }).filter(item => item.city);
+      const city = parts[0].trim();
+      const status = (parts[1] || 'open').trim();
 
-    renderCities();
-  } catch (err) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `<h3>${city}</h3><p class='status ${status}'>${status === 'open' ? 'Disponível' : 'Indisponível'}</p>`;
+
+      container.appendChild(card);
+    });
+  } catch(err) {
     console.error('Erro ao carregar cidades:', err);
-    container.innerHTML = '<div class="empty-message">Erro ao carregar as áreas. Verifique se o arquivo <b>cidades.txt</b> está na mesma pasta do HTML.</div>';
   }
 }
 
 window.addEventListener('load', () => {
   const loader = document.getElementById('loader');
-  const searchInput = document.getElementById('searchInput');
-  const availableOnly = document.getElementById('availableOnly');
+  loadCities();
 
-  searchInput.addEventListener('input', renderCities);
-  availableOnly.addEventListener('change', renderCities);
-
-  loadCities().finally(() => {
-    setTimeout(() => {
-      loader.style.opacity = '0';
-      loader.style.transition = '0.5s';
-      setTimeout(() => loader.remove(), 500);
-    }, 2000);
-  });
+  setTimeout(() => {
+    loader.style.opacity = '0';
+    loader.style.transition = '0.5s';
+    setTimeout(() => loader.remove(), 500);
+  }, 2000);
 });
 </script>
 
