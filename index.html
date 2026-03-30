@@ -85,6 +85,12 @@
 
 <header>
   Áreas Disponíveis para Registro
+  <div style="margin-top:12px; font-size:14px; font-weight:normal;">
+    <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+      <input type="checkbox" id="onlyAvailable">
+      Mostrar apenas áreas disponíveis
+    </label>
+  </div>
 </header>
 
 <div class="container" id="container">
@@ -111,18 +117,35 @@ async function loadCities() {
 
       const card = document.createElement('div');
       card.className = 'card';
+      card.dataset.status = status;
       card.innerHTML = `<h3>${city}</h3><p class='status ${status}'>${status === 'open' ? 'Disponível' : 'Indisponível'}</p>`;
 
       container.appendChild(card);
     });
+
+    applyFilter();
+  });
   } catch(err) {
     console.error('Erro ao carregar cidades:', err);
   }
 }
 
+function applyFilter() {
+  const checkbox = document.getElementById('onlyAvailable');
+  const cards = document.querySelectorAll('.card');
+
+  cards.forEach(card => {
+    const isAvailable = card.dataset.status === 'open';
+    card.style.display = checkbox && checkbox.checked && !isAvailable ? 'none' : 'block';
+  });
+}
+
 window.addEventListener('load', () => {
   const loader = document.getElementById('loader');
   loadCities();
+
+  const checkbox = document.getElementById('onlyAvailable');
+  checkbox.addEventListener('change', applyFilter);
 
   setTimeout(() => {
     loader.style.opacity = '0';
