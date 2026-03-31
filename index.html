@@ -183,14 +183,14 @@
   <div class="container" id="container"></div>
 
   <script>
-    const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt';
-    const OLD_FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt';
+   const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt';
+   const OLD_FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt';
 
     function createCard(city, status, changeType = '') {
       const card = document.createElement('div');
       card.className = 'card';
       card.dataset.status = status;
-      card.dataset.city = city.toLowerCase();
+      card.dataset.city = normalizeCityName(city);
 
       const title = document.createElement('h3');
       title.textContent = city;
@@ -205,7 +205,15 @@
       if (changeType) {
         const badge = document.createElement('span');
         badge.className = 'change-badge';
-        badge.textContent = changeType === 'opened' ? 'Abriu agora' : 'Fechou agora';
+
+        if (changeType === 'opened') {
+          badge.textContent = 'Abriu agora';
+        } else if (changeType === 'closed') {
+          badge.textContent = 'Fechou agora';
+        } else if (changeType === 'new') {
+          badge.textContent = 'Área nova';
+        }
+
         card.appendChild(badge);
       }
 
@@ -236,6 +244,14 @@
         .filter((line) => line.length > 0);
     }
 
+    function normalizeCityName(city) {
+      return (city || '')
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .trim()
+        .toLowerCase();
+    }
+
     function buildStatusMap(lines) {
       const map = {};
 
@@ -244,9 +260,13 @@
         const city = (parts[0] || '').trim();
         const normalizedStatus = (parts[1] || 'open').trim().toLowerCase();
         const status = normalizedStatus === 'closed' ? 'closed' : 'open';
+        const cityKey = normalizeCityName(city);
 
-        if (city) {
-          map[city] = status;
+        if (cityKey) {
+          map[cityKey] = {
+            name: city,
+            status
+          };
         }
       });
 
@@ -256,15 +276,20 @@
     function compareWithPrevious(previousMap, currentMap) {
       const changes = {};
 
-      Object.keys(currentMap).forEach((city) => {
-        const oldStatus = previousMap[city];
-        const newStatus = currentMap[city];
+      Object.keys(currentMap).forEach((cityKey) => {
+        const previousItem = previousMap[cityKey];
+        const currentItem = currentMap[cityKey];
 
-        if (!oldStatus || oldStatus === newStatus) {
+        if (!previousItem) {
+          changes[cityKey] = 'new';
           return;
         }
 
-        changes[city] = oldStatus === 'closed' && newStatus === 'open' ? 'opened' : 'closed';
+        if (previousItem.status === currentItem.status) {
+          return;
+        }
+
+        changes[cityKey] = previousItem.status === 'closed' && currentItem.status === 'open' ? 'opened' : 'closed';
       });
 
       return changes;
@@ -319,12 +344,13 @@
           const city = (parts[0] || '').trim();
           const normalizedStatus = (parts[1] || 'open').trim().toLowerCase();
           const status = normalizedStatus === 'closed' ? 'closed' : 'open';
+          const cityKey = normalizeCityName(city);
 
           if (!city) {
             return;
           }
 
-          container.appendChild(createCard(city, status, changes[city] || ''));
+          container.appendChild(createCard(city, status, changes[cityKey] || ''));
         });
 
         if (!container.children.length) {
@@ -352,6 +378,7 @@
       console.assert(typeof createCard === 'function', 'createCard deve existir');
       console.assert(typeof applyFilter === 'function', 'applyFilter deve existir');
       console.assert(typeof parseLinesFromText === 'function', 'parseLinesFromText deve existir');
+      console.assert(typeof normalizeCityName === 'function', 'normalizeCityName deve existir');
       console.assert(typeof buildStatusMap === 'function', 'buildStatusMap deve existir');
       console.assert(typeof compareWithPrevious === 'function', 'compareWithPrevious deve existir');
       console.assert(typeof normalizeCityLines === 'function', 'normalizeCityLines deve existir');
@@ -361,6 +388,7 @@
       console.assert(testCard.classList.contains('card'), 'O card deve ter a classe card');
       console.assert(testCard.dataset.status === 'open', 'O status do card deve ser open');
       console.assert(testCard.dataset.city === 'cidade teste', 'O dataset city deve ser normalizado');
+      console.assert(normalizeCityName('São Paulo') === 'sao paulo', 'normalizeCityName deve remover acentos');
       console.assert(testCard.querySelector('h3').textContent === 'Cidade Teste', 'O título da cidade deve ser renderizado');
       console.assert(testCard.querySelector('.status').textContent === 'Disponível', 'O texto de status deve ser renderizado');
       console.assert(testCard.querySelector('.change-badge').textContent === 'Abriu agora', 'O selo de mudança deve ser renderizado');
@@ -371,17 +399,24 @@
       const normalizedLines = normalizeCityLines(['31/03/2026 12:56', 'Aberdeen|closed', 'Abingdon|open']);
       console.assert(normalizedLines.length === 2, 'normalizeCityLines deve remover linhas sem separador');
 
-      const testMap = buildStatusMap(['Aberdeen|closed', 'Abingdon|open']);
-      console.assert(testMap.Aberdeen === 'closed', 'buildStatusMap deve mapear closed');
-      console.assert(testMap.Abingdon === 'open', 'buildStatusMap deve mapear open');
+      const testMap = buildStatusMap(['Aberdeen|closed', 'São Paulo|open']);
+      console.assert(testMap['aberdeen'].status === 'closed', 'buildStatusMap deve mapear closed');
+      console.assert(testMap['sao paulo'].status === 'open', 'buildStatusMap deve mapear open com nome normalizado');
 
       const changes = compareWithPrevious(
-        { Aberdeen: 'closed', Abingdon: 'open' },
-        { Aberdeen: 'open', Abingdon: 'closed', Bath: 'open' }
+        {
+          aberdeen: { name: 'Aberdeen', status: 'closed' },
+          abingdon: { name: 'Abingdon', status: 'open' }
+        },
+        {
+          aberdeen: { name: 'Aberdeen', status: 'open' },
+          abingdon: { name: 'Abingdon', status: 'closed' },
+          bath: { name: 'Bath', status: 'open' }
+        }
       );
-      console.assert(changes.Aberdeen === 'opened', 'Deve detectar quando a área abriu');
-      console.assert(changes.Abingdon === 'closed', 'Deve detectar quando a área fechou');
-      console.assert(!changes.Bath, 'Não deve marcar cidade nova como alteração');
+      console.assert(changes.aberdeen === 'opened', 'Deve detectar quando a área abriu');
+      console.assert(changes.abingdon === 'closed', 'Deve detectar quando a área fechou');
+      console.assert(changes.bath === 'new', 'Deve marcar cidade nova');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
