@@ -1,5 +1,5 @@
 30/03/2026 13:10
-Aberdare|open
+Aberdare|closed
 Aberdeen|closed
 Aberystwyth|closed
 Abingdon|closed
@@ -12,7 +12,7 @@ Antrim|open
 Ashford|closed
 Ashington|open
 Ashford|closed
-Ayr|open
+Ayr|closed
 Ballymena|open
 Banbridge|open
 Banbury|closed
@@ -30,7 +30,7 @@ Beaconsfield|closed
 Bedford|closed
 Lisburn|open
 Hemel-Hempstead|closed
-Beverley|open
+Beverley|closed
 Bexhill|closed
 Bicester|closed
 Biggleswade|open
