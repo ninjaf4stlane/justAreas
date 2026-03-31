@@ -1,6 +1,6 @@
 31/03/2026 14:56
-Aberdare|open
-Aberdeen|closed
+Aberdare|closed
+Aberdeen|open
 Aberystwyth|closed
 Abingdon|closed
 Watford|closed
