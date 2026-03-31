@@ -151,6 +151,21 @@
       color: #c95f00;
     }
 
+    .badge-open {
+      background: #e6fff1;
+      color: #0a8f3c;
+    }
+
+    .badge-closed {
+      background: #ffe6e6;
+      color: #b30000;
+    }
+
+    .badge-new {
+      background: #e6f0ff;
+      color: #0057b3;
+    }
+
     .message {
       padding: 30px;
       text-align: center;
@@ -183,8 +198,8 @@
   <div class="container" id="container"></div>
 
   <script>
-   const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt';
-   const OLD_FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt';
+    const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt';
+const OLD_FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt';
 
     function createCard(city, status, changeType = '') {
       const card = document.createElement('div');
@@ -197,7 +212,9 @@
 
       const statusEl = document.createElement('p');
       statusEl.className = 'status ' + status;
-      statusEl.textContent = status === 'open' ? 'Disponível' : 'Indisponível';
+      statusEl.textContent = status === 'open'
+        ? '🟢 Disponível'
+        : '🔴 Indisponível';
 
       card.appendChild(title);
       card.appendChild(statusEl);
@@ -207,11 +224,14 @@
         badge.className = 'change-badge';
 
         if (changeType === 'opened') {
-          badge.textContent = 'Abriu agora';
+          badge.textContent = '⚡ Liberado agora';
+          badge.classList.add('badge-open');
         } else if (changeType === 'closed') {
-          badge.textContent = 'Fechou agora';
+          badge.textContent = '🔴 Fechou agora';
+          badge.classList.add('badge-closed');
         } else if (changeType === 'new') {
-          badge.textContent = 'Área nova';
+          badge.textContent = '🆕 Área nova';
+          badge.classList.add('badge-new');
         }
 
         card.appendChild(badge);
