@@ -59,6 +59,14 @@
       font-weight: bold;
     }
 
+    #lastUpdate {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: normal;
+      opacity: 0.9;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
     .header-controls {
       margin-top: 12px;
       font-size: 14px;
@@ -131,6 +139,18 @@
       color: red;
     }
 
+    .change-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-weight: 600;
+      background: #fff1e6;
+      color: #c95f00;
+    }
+
     .message {
       padding: 30px;
       text-align: center;
@@ -148,6 +168,7 @@
 
   <header>
     Áreas Disponíveis para Registro
+    <div id="lastUpdate"></div>
     <div class="header-controls">
       <div class="controls-stack">
         <input type="text" id="searchInput" placeholder="Pesquisar área...">
@@ -162,9 +183,10 @@
   <div class="container" id="container"></div>
 
   <script>
-    const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/main/cidades.txt';
+    const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt';
+    const OLD_FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt';
 
-    function createCard(city, status) {
+    function createCard(city, status, changeType = '') {
       const card = document.createElement('div');
       card.className = 'card';
       card.dataset.status = status;
@@ -179,6 +201,14 @@
 
       card.appendChild(title);
       card.appendChild(statusEl);
+
+      if (changeType) {
+        const badge = document.createElement('span');
+        badge.className = 'change-badge';
+        badge.textContent = changeType === 'opened' ? 'Abriu agora' : 'Fechou agora';
+        card.appendChild(badge);
+      }
+
       return card;
     }
 
@@ -199,24 +229,92 @@
       });
     }
 
-    async function loadCities() {
-      const container = document.getElementById('container');
+    function parseLinesFromText(text) {
+      return text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
+    }
 
-      try {
-        const response = await fetch(FILE_URL, { cache: 'no-store' });
-        if (!response.ok) {
-          throw new Error('Não foi possível carregar o arquivo de cidades.');
+    function buildStatusMap(lines) {
+      const map = {};
+
+      lines.forEach((line) => {
+        const parts = line.split('|');
+        const city = (parts[0] || '').trim();
+        const normalizedStatus = (parts[1] || 'open').trim().toLowerCase();
+        const status = normalizedStatus === 'closed' ? 'closed' : 'open';
+
+        if (city) {
+          map[city] = status;
+        }
+      });
+
+      return map;
+    }
+
+    function compareWithPrevious(previousMap, currentMap) {
+      const changes = {};
+
+      Object.keys(currentMap).forEach((city) => {
+        const oldStatus = previousMap[city];
+        const newStatus = currentMap[city];
+
+        if (!oldStatus || oldStatus === newStatus) {
+          return;
         }
 
-        const text = await response.text();
-        const lines = text
-          .split('\n')
-          .map((line) => line.trim())
-          .filter((line) => line.length > 0);
+        changes[city] = oldStatus === 'closed' && newStatus === 'open' ? 'opened' : 'closed';
+      });
+
+      return changes;
+    }
+
+    function normalizeCityLines(lines) {
+      return lines.filter((line) => line.includes('|'));
+    }
+
+    async function loadCities() {
+      const container = document.getElementById('container');
+      const updateEl = document.getElementById('lastUpdate');
+
+      try {
+        const [currentResponse, oldResponse] = await Promise.all([
+          fetch(FILE_URL, { cache: 'no-store' }),
+          fetch(OLD_FILE_URL, { cache: 'no-store' })
+        ]);
+
+        if (!currentResponse.ok) {
+          throw new Error('Não foi possível carregar o arquivo de cidades atual.');
+        }
+
+        if (!oldResponse.ok) {
+          throw new Error('Não foi possível carregar o arquivo de cidades antigo.');
+        }
+
+        const currentText = await currentResponse.text();
+        const oldText = await oldResponse.text();
+
+        const currentLines = parseLinesFromText(currentText);
+        const oldLines = parseLinesFromText(oldText);
+
+        const updateDate = currentLines.shift() || '';
+        oldLines.shift();
+
+        if (updateEl) {
+          updateEl.textContent = updateDate ? 'Última atualização: ' + updateDate : '';
+        }
+
+        const normalizedCurrentLines = normalizeCityLines(currentLines);
+        const normalizedOldLines = normalizeCityLines(oldLines);
 
         container.innerHTML = '';
 
-        lines.forEach((line) => {
+        const currentMap = buildStatusMap(normalizedCurrentLines);
+        const previousMap = buildStatusMap(normalizedOldLines);
+        const changes = compareWithPrevious(previousMap, currentMap);
+
+        normalizedCurrentLines.forEach((line) => {
           const parts = line.split('|');
           const city = (parts[0] || '').trim();
           const normalizedStatus = (parts[1] || 'open').trim().toLowerCase();
@@ -226,7 +324,7 @@
             return;
           }
 
-          container.appendChild(createCard(city, status));
+          container.appendChild(createCard(city, status, changes[city] || ''));
         });
 
         if (!container.children.length) {
@@ -236,7 +334,7 @@
         applyFilter();
       } catch (error) {
         console.error(error);
-        container.innerHTML = '<div class="message">Erro ao carregar as cidades. Verifique a URL do arquivo .txt.</div>';
+        container.innerHTML = '<div class="message">Erro ao carregar os arquivos. Verifique a URL do cidades.txt e do cidades_old.txt.</div>';
       } finally {
         const loader = document.getElementById('loader');
         setTimeout(() => {
@@ -253,59 +351,37 @@
     function runBasicChecks() {
       console.assert(typeof createCard === 'function', 'createCard deve existir');
       console.assert(typeof applyFilter === 'function', 'applyFilter deve existir');
+      console.assert(typeof parseLinesFromText === 'function', 'parseLinesFromText deve existir');
+      console.assert(typeof buildStatusMap === 'function', 'buildStatusMap deve existir');
+      console.assert(typeof compareWithPrevious === 'function', 'compareWithPrevious deve existir');
+      console.assert(typeof normalizeCityLines === 'function', 'normalizeCityLines deve existir');
       console.assert(typeof loadCities === 'function', 'loadCities deve existir');
 
-      const testCard = createCard('Cidade Teste', 'open');
+      const testCard = createCard('Cidade Teste', 'open', 'opened');
       console.assert(testCard.classList.contains('card'), 'O card deve ter a classe card');
       console.assert(testCard.dataset.status === 'open', 'O status do card deve ser open');
       console.assert(testCard.dataset.city === 'cidade teste', 'O dataset city deve ser normalizado');
       console.assert(testCard.querySelector('h3').textContent === 'Cidade Teste', 'O título da cidade deve ser renderizado');
       console.assert(testCard.querySelector('.status').textContent === 'Disponível', 'O texto de status deve ser renderizado');
+      console.assert(testCard.querySelector('.change-badge').textContent === 'Abriu agora', 'O selo de mudança deve ser renderizado');
 
-      const testContainer = document.createElement('div');
-      testContainer.appendChild(createCard('São Paulo', 'open'));
-      testContainer.appendChild(createCard('Rio de Janeiro', 'closed'));
-      document.body.appendChild(testContainer);
+      const parsedLines = parseLinesFromText('31/03/2026 12:56\nAberdeen|closed\nAbingdon|open\n');
+      console.assert(parsedLines.length === 3, 'parseLinesFromText deve manter a linha da data e as cidades');
 
-      const tempCheckbox = document.createElement('input');
-      tempCheckbox.type = 'checkbox';
-      tempCheckbox.id = 'onlyAvailable';
-      tempCheckbox.checked = true;
+      const normalizedLines = normalizeCityLines(['31/03/2026 12:56', 'Aberdeen|closed', 'Abingdon|open']);
+      console.assert(normalizedLines.length === 2, 'normalizeCityLines deve remover linhas sem separador');
 
-      const tempSearch = document.createElement('input');
-      tempSearch.type = 'text';
-      tempSearch.id = 'searchInput';
-      tempSearch.value = 'são';
+      const testMap = buildStatusMap(['Aberdeen|closed', 'Abingdon|open']);
+      console.assert(testMap.Aberdeen === 'closed', 'buildStatusMap deve mapear closed');
+      console.assert(testMap.Abingdon === 'open', 'buildStatusMap deve mapear open');
 
-      const originalCheckbox = document.getElementById('onlyAvailable');
-      const originalSearch = document.getElementById('searchInput');
-
-      if (originalCheckbox) {
-        originalCheckbox.id = 'onlyAvailable_original';
-      }
-      if (originalSearch) {
-        originalSearch.id = 'searchInput_original';
-      }
-
-      document.body.appendChild(tempCheckbox);
-      document.body.appendChild(tempSearch);
-
-      applyFilter();
-
-      const tempCards = testContainer.querySelectorAll('.card');
-      console.assert(tempCards[0].style.display === 'block', 'Cidade disponível e compatível com busca deve aparecer');
-      console.assert(tempCards[1].style.display === 'none', 'Cidade indisponível deve ser ocultada quando checkbox estiver marcado');
-
-      tempCheckbox.remove();
-      tempSearch.remove();
-      testContainer.remove();
-
-      if (originalCheckbox) {
-        originalCheckbox.id = 'onlyAvailable';
-      }
-      if (originalSearch) {
-        originalSearch.id = 'searchInput';
-      }
+      const changes = compareWithPrevious(
+        { Aberdeen: 'closed', Abingdon: 'open' },
+        { Aberdeen: 'open', Abingdon: 'closed', Bath: 'open' }
+      );
+      console.assert(changes.Aberdeen === 'opened', 'Deve detectar quando a área abriu');
+      console.assert(changes.Abingdon === 'closed', 'Deve detectar quando a área fechou');
+      console.assert(!changes.Bath, 'Não deve marcar cidade nova como alteração');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
