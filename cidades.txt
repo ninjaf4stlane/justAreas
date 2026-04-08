@@ -1,0 +1,503 @@
+09/04/2026 00:19
+Aberdare|open
+Aberdeen|closed
+Aberystwyth|open
+Abingdon|closed
+Watford|closed
+Alloa|open
+Amersham|closed
+Amesbury|open
+Andover|closed
+Antrim|open
+Ashford|closed
+Ashington|open
+Ashford|closed
+Ayr|open
+Ballymena|open
+Banbridge|open
+Banbury|closed
+Bangor-NI|open
+Bangor-Wales|closed
+Barnsley|closed
+Barnstaple|closed
+Barrow-In-Furness|closed
+Barry|closed
+Basildon|closed
+Basingstoke|open
+Bath|open
+Bathgate|open
+Beaconsfield|closed
+Bedford|closed
+Lisburn|open
+Hemel-Hempstead|closed
+Beverley|open
+Bexhill|closed
+Bicester|closed
+Biggleswade|closed
+Birmingham - Solihull|closed
+Birmingham - West Bromwich|closed
+Birmingham - Harborne|closed
+Birmingham - Solihull|closed
+Birmingham - Solihull|closed
+Birmingham - Harborne|closed
+Birmingham - Solihull|closed
+Birmingham - Marston Green|closed
+Bishop-Auckland|closed
+Bishops-Stortford|closed
+Blackburn|closed
+Blackpool - North|closed
+Blackpool - North|closed
+Blackwood|open
+Blyth|closed
+Bognor-Regis|open
+Bolton|closed
+Bolton|closed
+Boston|closed
+Ferndown|closed
+Bracknell|closed
+Bradford|closed
+Braintree|closed
+Brentwood|closed
+Bridgend|open
+Bridgwater|open
+Bridlington|open
+Brighouse|closed
+Brighton|closed
+Brighton|closed
+Bristol - South|open
+Bristol - Fishponds|open
+Bristol - South|open
+Bristol - Central|open
+Margate|closed
+Burgess-Hill|closed
+Burnley|closed
+Burntwood|open
+Burton-Upon-Trent|closed
+Bury - Central|open
+Bury-St-Edmunds|open
+Watford|closed
+Caerphilly|closed
+Farnham|closed
+Cambridge|closed
+Cannock - Central|closed
+Canterbury|closed
+Canvey-Island|open
+Carcroft|open
+Cardiff - Central|closed
+Cardiff - Central|closed
+Carlisle|closed
+Carrickfergus|open
+Castleford|closed
+Castlereagh|open
+Caterham|closed
+Catterick|open
+Gillingham-Chatham|closed
+Chelmsford|closed
+Cheltenham|closed
+Cheshunt - Hoddesdon|closed
+Ellesmere-Port|open
+Chesterfield|closed
+Chichester|open
+Chippenham|open
+Chorley|closed
+Christchurch|closed
+Slough|closed
+Cirencester|open
+Clacton|open
+Glasgow - Central|open
+Coalville|open
+Glasgow - East|open
+Colchester|closed
+Coleraine|open
+Consett|open
+Corby|closed
+Cortonwood|closed
+Coventry|closed
+Crawley|open
+Crewe|closed
+Cumbernauld|open
+Cwmbran|closed
+Dalkeith|closed
+Dalton-Park|open
+Darlington - Central|closed
+Daventry|open
+Derby - North|closed
+Derby - South|closed
+Derry|closed
+Derry|closed
+Didcot|open
+Doncaster|closed
+Dorchester|open
+Dover|closed
+Dudley - Central|closed
+Dudley - Merry Hill|closed
+Dumbarton|open
+Dumfries|open
+Dundee|closed
+Belfast|closed
+Edinburgh|closed
+Durham|closed
+Hamilton|closed
+East-Grinstead|open
+Eastbourne|closed
+Eastleigh|closed
+Ebbw-Vale|open
+Edinburgh|closed
+Elgin|open
+Ellesmere-Port|open
+Evesham|closed
+Exeter|open
+Exmouth|open
+Falkirk|closed
+Farnham|closed
+Felixstowe|open
+Bournemouth|closed
+Fleet|closed
+Flint|closed
+Folkestone|closed
+Formby|closed
+Maidstone|closed
+Glasgow - East|open
+Glastonbury|open
+Gloucester|closed
+Glenrothes|closed
+Gloucester|closed
+Goole|open
+Gorseinon|closed
+Gosport|open
+Grantham|closed
+Gillingham-Chatham|closed
+Grays|closed
+Great Malvern|open
+Great-Yarmouth|closed
+Greenock|open
+Grimsby|closed
+Guildford|closed
+Guiseley|open
+Bradford|closed
+Hamilton|closed
+Z - Hapsford|open
+Harlow|closed
+Harrogate|open
+Hartlepool|closed
+Harwich|open
+Haslingden|closed
+Hastings|closed
+Hatfield|closed
+Havant|closed
+Hemel-Hempstead|closed
+Hereford|closed
+High-Wycombe|closed
+Hitchin|open
+Holywood|open
+Horsham|closed
+Huddersfield|closed
+Hull - Central|closed
+Hull - Central|closed
+Huntingdon|closed
+Ilkeston|open
+Inverness|closed
+Ipswich|closed
+Irvine|closed
+Z - Isle of Arran - Test|open
+Keighley|closed
+Bedford|closed
+Kendal|open
+Kettering|open
+Kidderminster|closed
+Kidderminster|closed
+Kilmarnock|closed
+Kings-Lynn|closed
+Kings-Lynn|closed
+Kirkby|closed
+Kirkcaldy|closed
+Lancaster|closed
+Leamington-Spa|closed
+Leatherhead|closed
+Leeds - Oakwood|open
+Leeds - Dewsbury|closed
+Leeds - Oakwood|open
+Leeds - South|open
+Leeds - Central|open
+Leicester - North|open
+Leicester - South|open
+Leicester - North|open
+Leicester - North|open
+Leigh|closed
+Leighton-Buzzard|closed
+Leven|closed
+Leyland|open
+Lichfield|closed
+Lincoln|closed
+Lisburn|open
+Littlehampton|closed
+Liverpool - Central|closed
+Liverpool - Litherland|closed
+Liverpool - Central|closed
+Liverpool - Birkenhead|closed
+Liverpool - Central|closed
+Liverpool - Garston|closed
+Liverpool - Upton|closed
+Livingston|open
+Llandudno|closed
+Llanelli|open
+London - Acton|closed
+Addlestone|closed
+Sunbury-on-Thames|closed
+London - Barnet|closed
+London - Crystal Palace|closed
+London - Beckenham|closed
+Dartford|closed
+London - Bexley|closed
+Borehamwood|closed
+London - Brent|closed
+London - Brent - North|closed
+London - Battersea|closed
+London - Camden|closed
+London - Canary Wharf|closed
+London - Finsbury Park|closed
+London - Croydon|closed
+London - Norbury|closed
+London - Camden|closed
+London - Dagenham|closed
+London - Dalston|closed
+London - Acton|closed
+London - Enfield|closed
+Epsom|closed
+London - Finchley|closed
+London - Finsbury Park|closed
+London - Greenford|closed
+London - Greenwich - East|closed
+London - Greenwich|closed
+London - Harrow|closed
+London - Hillingdon|closed
+London - Hornchurch|closed
+London - Hounslow|closed
+London - Ilford|closed
+London - Crystal Palace|closed
+London - Kennington|closed
+London - Kingston|closed
+London - Lewisham|closed
+London - Merton|closed
+Molesey|closed
+London - Dalston|closed
+London - Norbury|closed
+London - Orpington|closed
+London - Paddington|closed
+London - Kennington|closed
+London - Purley|closed
+London - Richmond|closed
+London - Romford|closed
+London - Ruislip|closed
+London - Sidcup|closed
+Staines|closed
+London - Stanmore|closed
+London - Tooting|closed
+London - Tottenham|closed
+London - Twickenham|closed
+London - Battersea|closed
+London - Battersea|closed
+London - Wimbledon|closed
+London - Orpington|closed
+Longbridge|closed
+Burton-Upon-Trent|closed
+Loughton|closed
+Louth|open
+Lowestoft|closed
+Luton|closed
+Blackpool - Lytham|closed
+Macclesfield|closed
+Slough|closed
+Maidstone|closed
+Maldon|open
+Manchester - Bredbury|closed
+Manchester - Central|open
+Manchester - Clayton|open
+Manchester - Clayton|open
+Manchester - Sale|closed
+Manchester - Denton|open
+Manchester - Stockport|open
+Manchester - Hazel Grove|open
+Manchester - Trafford|open
+Manchester - Wythenshawe|open
+Mansfield|open
+Margate|closed
+Market Harborough|closed
+Meir|closed
+Melksham|closed
+Melton-Mowbray|open
+Melton-Mowbray|open
+Merthyr-Tydfil|open
+Mexborough|closed
+Middlesbrough - Central|closed
+Milton-Keynes - North|closed
+Milton-Keynes - South|closed
+Z - Mold|closed
+Morecambe|closed
+Hamilton|closed
+Neath|open
+Nelson|closed
+Newark|closed
+Newbury|closed
+Newcastle - Westerhope|closed
+Newcastle - South Shields|closed
+Newcastle - North Shields|closed
+Newcastle - Westerhope|closed
+Newcastle - Central|closed
+Newcastle - Westerhope|closed
+Newhaven|closed
+Newmarket|open
+Newport|closed
+Newport-IOW|open
+Newquay|open
+Newry|open
+Newton-Abbot|closed
+Newton-Aycliffe|open
+Newton-le-Willows|closed
+Newtownards|open
+Northampton - Central|closed
+Northampton - Central|closed
+Northwich|closed
+Norwich|closed
+Nottingham - Chilwell|open
+Nottingham - Chilwell|open
+Nottingham - Victoria|open
+Nottingham - Hucknall|open
+Nottingham - Hucknall|open
+Nuneaton|closed
+Ormskirk|closed
+Oxford|closed
+Paignton|closed
+Glasgow - South|open
+Pendlebury|open
+Perth|closed
+Peterborough|closed
+Peterlee|closed
+Pilsworth|open
+Plymouth - Barbican|closed
+Plymouth - Derriford|closed
+Castleford|closed
+Pontprennau|open
+Poole|closed
+Port-Talbot|open
+Portadown|closed
+Portsmouth|closed
+Potters-Bar|closed
+Preston|closed
+Prudhoe|closed
+Queensferry|closed
+Gillingham-Chatham|closed
+Margate|closed
+Raunds|open
+Reading - South|closed
+Reading - Central|closed
+Redcar|open
+Redditch|closed
+Redhill|closed
+Redruth|closed
+Clydebank|open
+Rhyl|closed
+Ripley|closed
+Rochdale|open
+Rotherham|open
+Z - Rothwell|closed
+Rugby|closed
+Rugeley|open
+Runcorn|closed
+Salisbury|closed
+Saltash|open
+Sandbach|open
+Scarborough|closed
+Scunthorpe|closed
+Selby|closed
+Sevenoaks|open
+Sheffield - East|closed
+Sheffield - East|closed
+Sheffield - Central|closed
+Sheppey|closed
+Shrewsbury|closed
+Sittingbourne|closed
+Skegness|open
+Skelmersdale|open
+Skelton|closed
+Skipton|open
+Sleaford|open
+Slough|closed
+Snodland|closed
+South Ferrers|closed
+Southampton - Central|closed
+Southampton - Central|closed
+Southend|closed
+Southport|closed
+Spalding|open
+Spennymoor|closed
+St Neots|closed
+St. Albans|closed
+St-Helens|closed
+Stafford|closed
+Stanford-le-Hope|closed
+Stanley|open
+Staveley|closed
+Stevenage|open
+Stirling|open
+Stockton-on-tees|closed
+Stoke-On-Trent|closed
+Stratford-Upon-Avon|open
+Stroud|open
+Sudbury|open
+Sunderland - Central|closed
+Sutton-in-Ashfield|open
+Swadlincote|closed
+Swansea - Central|closed
+Swansea - Morriston|open
+Swindon|closed
+Talbot-Green|open
+Tamworth|closed
+Taunton|closed
+Telford|closed
+Thetford|open
+Thorne|closed
+Thurrock|open
+Tonbridge|closed
+Tonypandy|open
+Torquay|closed
+Totton|closed
+Trowbridge|closed
+Truro|open
+Tyldesley|open
+Uckfield|open
+Uttoxeter|open
+Walkden|closed
+Walsall - Central|closed
+Walsall - Bloxwich|closed
+Walton-On-Thames|closed
+Warrington|closed
+Washington|closed
+Watford|closed
+Wellingborough|closed
+Wellington|open
+Weston-Super-Mare|closed
+Weston-Super-Mare|closed
+Weymouth|closed
+Whiteley|closed
+Whitstable|closed
+Widnes|open
+Wigan|closed
+Winchester|open
+Slough|closed
+Winsford|closed
+Wisbech|open
+Witney|open
+Woking|closed
+Wolverhampton - Central|closed
+Wolverhampton - Bentley|closed
+Z - Wolverton|closed
+Wolviston|closed
+Worcester|closed
+Workington|closed
+Worksop|closed
+Worthing|open
+Wrexham|closed
+Yate|closed
+Yeovil|open
+York|closed
