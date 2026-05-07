@@ -1,0 +1,52 @@
+Z - IE - Arklow|open
+IE - Ashbourne|open
+IE - Athlone|closed
+IE - Balbriggan|open
+IE - Bray|closed
+IE - Carlow|closed
+IE - Castlebar|open
+IE - Cavan|open
+IE - Clonmel|open
+IE - Cork|closed
+Z - IE - Cork - Wilton|closed
+IE - Cork - Ballincollig|open
+Z - IE - Cork - Douglas|closed
+IE - Drogheda|closed
+IE - Dublin - Dundrum/Sandyford|closed
+IE - Dublin - Tallaght|closed
+Z - IE - Dublin - South|closed
+IE - Dublin - Central|closed
+IE - Dublin - North West|closed
+IE - Dublin - North East|closed
+IE - Dublin - Blanchardstown|closed
+IE - Dublin - Dun Laoghaire|closed
+Z - IE - Dublin - Carrickmines|closed
+IE - Dublin - Swords|closed
+IE - Dublin - Walkinstown|closed
+IE - Dublin - Clondalkin|closed
+IE - Dundalk|closed
+Z - IE - Dungarvan|open
+IE - Ennis|closed
+Z - IE - DNU|closed
+IE - Galway|closed
+IE - Kilkenny|open
+IE - Killarney|open
+IE - Letterkenny|open
+IE - Limerick|closed
+IE - Longford|open
+IE - Mallow|open
+IE - Maynooth|open
+Z - IE - Midleton|open
+IE - Mullingar|open
+IE - Naas|closed
+IE - Navan|closed
+Z - IE - Nenagh|open
+IE - Newbridge|closed
+IE - Portlaoise|open
+IE - Shannon|open
+IE - Sligo|closed
+IE - Tralee|open
+IE - Tullamore|open
+IE - Waterford|closed
+IE - Wexford|closed
+07/05/2026 03:15  21  Areas Abertas
