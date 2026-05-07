@@ -470,11 +470,8 @@
 
     const timestamp = Date.now();
 
-    const FILE_URL =
-      `https://cdn.jsdelivr.net/gh/ninjaf4stlane/justAreas@main/cidades.txt?v=${timestamp}`;
-
-    const OLD_FILE_URL =
-      `https://cdn.jsdelivr.net/gh/ninjaf4stlane/justAreas@main/cidades_old.txt?v=${timestamp}`;
+  const FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()}`;
+  const OLD_FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt?t=${Date.now()}`;
 
     let selectedCountry = 'UK';
 
