@@ -1,13 +1,21 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Áreas Disponíveis</title>
+
+  <title>Áreas Disponíveis para Registro</title>
+
+  <meta name="description" content="Lista atualizada de áreas disponíveis para registro">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
+
     * {
       margin: 0;
       padding: 0;
@@ -39,15 +47,20 @@
       width: 50px;
       height: 50px;
       border: 6px solid white;
-      border-top: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid rgba(255,255,255,0.3);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin-bottom: 10px;
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     header {
@@ -102,6 +115,33 @@
       letter-spacing: 0.3px;
     }
 
+    .country-filters {
+      display: flex;
+      gap: 10px;
+    }
+
+    .country-btn {
+      border: none;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 14px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      transition: 0.2s ease;
+    }
+
+    .country-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .country-btn.active {
+      background: white;
+      color: #ff7a00;
+      font-weight: 600;
+    }
+
     .container {
       padding: 30px;
       display: grid;
@@ -113,17 +153,13 @@
       background: white;
       border-radius: 18px;
       padding: 16px;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
       transition: all 0.2s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
     }
 
     .card h3 {
@@ -159,21 +195,6 @@
     }
 
     .badge-open {
-      background: #eafaf1;
-      color: #1f7a4d;
-    }
-
-    .badge-closed {
-      background: #fdecec;
-      color: #a33a3a;
-    }
-
-    .badge-new {
-      background: #eef4ff;
-      color: #3a5aa3;
-    }
-
-    .badge-open {
       background: #e6fff1;
       color: #0a8f3c;
     }
@@ -195,96 +216,75 @@
       font-size: 15px;
       grid-column: 1 / -1;
     }
+
   </style>
 </head>
+
 <body>
+
   <div id="loader">
     <div class="wheel"></div>
     <p>Carregando...</p>
   </div>
 
   <header>
+
     Áreas Disponíveis para Registro
+
     <div id="lastUpdate"></div>
+
     <div class="header-controls">
+
       <div class="controls-stack">
-        <input type="text" id="searchInput" placeholder="Pesquisar área...">
+
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Pesquisar área..."
+        >
+
         <label>
           <input type="checkbox" id="onlyAvailable" checked>
           Mostrar apenas áreas disponíveis
         </label>
+
+        <div class="country-filters">
+
+          <button
+            class="country-btn active"
+            data-country="UK"
+          >
+            🇬🇧 United Kingdom
+          </button>
+
+          <button
+            class="country-btn"
+            data-country="IE"
+          >
+            🇮🇪 Ireland
+          </button>
+
+        </div>
+
       </div>
+
     </div>
+
   </header>
 
   <div class="container" id="container"></div>
 
   <script>
-   const FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()}`;
-const OLD_FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt?t=${Date.now()}`;
 
-    function createCard(city, status, changeType = '') {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.dataset.status = status;
-      card.dataset.city = normalizeCityName(city);
+    const timestamp = Date.now();
 
-      const title = document.createElement('h3');
-      title.textContent = city;
+    const FILE_URL =
+      `https://cdn.jsdelivr.net/gh/ninjaf4stlane/justAreas@main/cidades.txt?v=${timestamp}`;
 
-      const statusEl = document.createElement('p');
-      statusEl.className = 'status ' + status;
-      statusEl.textContent = status === 'open'
-        ? '🟢 Disponível'
-        : '🔴 Indisponível';
+    const OLD_FILE_URL =
+      `https://cdn.jsdelivr.net/gh/ninjaf4stlane/justAreas@main/cidades_old.txt?v=${timestamp}`;
 
-      card.appendChild(title);
-      card.appendChild(statusEl);
-
-      if (changeType) {
-        const badge = document.createElement('span');
-        badge.className = 'change-badge';
-
-        if (changeType === 'opened') {
-          badge.textContent = 'Liberado agora';
-          badge.classList.add('badge-open');
-        } else if (changeType === 'closed') {
-          badge.textContent = '🔴 Fechou agora';
-          badge.classList.add('badge-closed');
-        } else if (changeType === 'new') {
-          badge.textContent = '🆕 Área nova';
-          badge.classList.add('badge-new');
-        }
-
-        card.appendChild(badge);
-      }
-
-      return card;
-    }
-
-    function applyFilter() {
-      const checkbox = document.getElementById('onlyAvailable');
-      const searchInput = document.getElementById('searchInput');
-      const cards = document.querySelectorAll('.card');
-      const showOnlyAvailable = checkbox.checked;
-      const search = searchInput.value.trim().toLowerCase();
-
-      cards.forEach((card) => {
-        const isAvailable = card.dataset.status === 'open';
-        const cityName = card.dataset.city || '';
-        const matchesAvailability = !showOnlyAvailable || isAvailable;
-        const matchesSearch = cityName.includes(search);
-
-        card.style.display = matchesAvailability && matchesSearch ? 'block' : 'none';
-      });
-    }
-
-    function parseLinesFromText(text) {
-      return text
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0);
-    }
+    let selectedCountry = 'UK';
 
     function normalizeCityName(city) {
       return (city || '')
@@ -294,183 +294,416 @@ const OLD_FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/
         .toLowerCase();
     }
 
+    function createCard(country, city, status, changeType = '') {
+
+      const card = document.createElement('div');
+
+      card.className = 'card';
+
+      card.dataset.status = status;
+      card.dataset.city = normalizeCityName(city);
+      card.dataset.country = country;
+
+      const title = document.createElement('h3');
+
+      title.textContent = city;
+
+      const countryEl = document.createElement('p');
+
+      countryEl.className = 'status';
+
+      countryEl.textContent =
+        country === 'UK'
+          ? '🇬🇧 United Kingdom'
+          : '🇮🇪 Ireland';
+
+      const statusEl = document.createElement('p');
+
+      statusEl.className = 'status ' + status;
+
+      statusEl.textContent =
+        status === 'open'
+          ? '🟢 Disponível'
+          : '🔴 Indisponível';
+
+      card.appendChild(title);
+      card.appendChild(countryEl);
+      card.appendChild(statusEl);
+
+      if (changeType) {
+
+        const badge = document.createElement('span');
+
+        badge.className = 'change-badge';
+
+        if (changeType === 'opened') {
+
+          badge.textContent = 'Liberado agora';
+          badge.classList.add('badge-open');
+
+        } else if (changeType === 'closed') {
+
+          badge.textContent = '🔴 Fechou agora';
+          badge.classList.add('badge-closed');
+
+        } else if (changeType === 'new') {
+
+          badge.textContent = '🆕 Área nova';
+          badge.classList.add('badge-new');
+
+        }
+
+        card.appendChild(badge);
+      }
+
+      return card;
+    }
+
+    function applyFilter() {
+
+      const checkbox =
+        document.getElementById('onlyAvailable');
+
+      const searchInput =
+        document.getElementById('searchInput');
+
+      const cards =
+        document.querySelectorAll('.card');
+
+      const showOnlyAvailable =
+        checkbox.checked;
+
+      const search =
+        searchInput.value.trim().toLowerCase();
+
+      cards.forEach((card) => {
+
+        const isAvailable =
+          card.dataset.status === 'open';
+
+        const cityName =
+          card.dataset.city || '';
+
+        const country =
+          card.dataset.country || '';
+
+        const matchesAvailability =
+          !showOnlyAvailable || isAvailable;
+
+        const matchesSearch =
+          cityName.includes(search);
+
+        const matchesCountry =
+          country === selectedCountry;
+
+        card.style.display =
+          matchesAvailability &&
+          matchesSearch &&
+          matchesCountry
+            ? 'block'
+            : 'none';
+
+      });
+
+    }
+
+    function parseLinesFromText(text) {
+
+      return text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
+
+    }
+
     function buildStatusMap(lines) {
+
       const map = {};
 
       lines.forEach((line) => {
+
         const parts = line.split('|');
-        const city = (parts[0] || '').trim();
-        const normalizedStatus = (parts[1] || 'open').trim().toLowerCase();
-        const status = normalizedStatus === 'closed' ? 'closed' : 'open';
-        const cityKey = normalizeCityName(city);
+
+        const country =
+          (parts[0] || '').trim();
+
+        const city =
+          (parts[1] || '').trim();
+
+        const normalizedStatus =
+          (parts[2] || 'open')
+            .trim()
+            .toLowerCase();
+
+        const status =
+          normalizedStatus === 'closed'
+            ? 'closed'
+            : 'open';
+
+        const cityKey =
+          normalizeCityName(country + '-' + city);
 
         if (cityKey) {
+
           map[cityKey] = {
+            country,
             name: city,
             status
           };
+
         }
+
       });
 
       return map;
     }
 
     function compareWithPrevious(previousMap, currentMap) {
+
       const changes = {};
 
       Object.keys(currentMap).forEach((cityKey) => {
-        const previousItem = previousMap[cityKey];
-        const currentItem = currentMap[cityKey];
+
+        const previousItem =
+          previousMap[cityKey];
+
+        const currentItem =
+          currentMap[cityKey];
 
         if (!previousItem) {
+
           changes[cityKey] = 'new';
           return;
+
         }
 
-        if (previousItem.status === currentItem.status) {
+        if (
+          previousItem.status === currentItem.status
+        ) {
           return;
         }
 
-        changes[cityKey] = previousItem.status === 'closed' && currentItem.status === 'open' ? 'opened' : 'closed';
+        changes[cityKey] =
+          previousItem.status === 'closed' &&
+          currentItem.status === 'open'
+            ? 'opened'
+            : 'closed';
+
       });
 
       return changes;
     }
 
     function normalizeCityLines(lines) {
-      return lines.filter((line) => line.includes('|'));
+
+      return lines.filter(
+        (line) => line.includes('|')
+      );
+
     }
 
     async function loadCities() {
-      const container = document.getElementById('container');
-      const updateEl = document.getElementById('lastUpdate');
+
+      const container =
+        document.getElementById('container');
+
+      const updateEl =
+        document.getElementById('lastUpdate');
 
       try {
-        const [currentResponse, oldResponse] = await Promise.all([
-          fetch(FILE_URL, { cache: 'no-store' }),
-          fetch(OLD_FILE_URL, { cache: 'no-store' })
-        ]);
+
+        const [currentResponse, oldResponse] =
+          await Promise.all([
+
+            fetch(FILE_URL, {
+              cache: 'no-store'
+            }),
+
+            fetch(OLD_FILE_URL, {
+              cache: 'no-store'
+            })
+
+          ]);
 
         if (!currentResponse.ok) {
-          throw new Error('Não foi possível carregar o arquivo de cidades atual.');
+          throw new Error('Erro ao carregar lista atual');
         }
 
         if (!oldResponse.ok) {
-          throw new Error('Não foi possível carregar o arquivo de cidades antigo.');
+          throw new Error('Erro ao carregar lista antiga');
         }
 
-        const currentText = await currentResponse.text();
-        const oldText = await oldResponse.text();
+        const currentText =
+          await currentResponse.text();
 
-        const currentLines = parseLinesFromText(currentText);
-        const oldLines = parseLinesFromText(oldText);
+        const oldText =
+          await oldResponse.text();
 
-        const updateDate = currentLines.pop() || '';
+        const currentLines =
+          parseLinesFromText(currentText);
+
+        const oldLines =
+          parseLinesFromText(oldText);
+
+        const updateDate =
+          currentLines.pop() || '';
+
         oldLines.pop();
 
         if (updateEl) {
-          updateEl.textContent = updateDate ? 'Última atualização: ' + updateDate : '';
+
+          updateEl.textContent =
+            updateDate
+              ? 'Última atualização: ' + updateDate
+              : '';
+
         }
 
-        const normalizedCurrentLines = normalizeCityLines(currentLines);
-        const normalizedOldLines = normalizeCityLines(oldLines);
+        const normalizedCurrentLines =
+          normalizeCityLines(currentLines);
+
+        const normalizedOldLines =
+          normalizeCityLines(oldLines);
 
         container.innerHTML = '';
 
-        const currentMap = buildStatusMap(normalizedCurrentLines);
-        const previousMap = buildStatusMap(normalizedOldLines);
-        const changes = compareWithPrevious(previousMap, currentMap);
+        const currentMap =
+          buildStatusMap(normalizedCurrentLines);
+
+        const previousMap =
+          buildStatusMap(normalizedOldLines);
+
+        const changes =
+          compareWithPrevious(
+            previousMap,
+            currentMap
+          );
 
         normalizedCurrentLines.forEach((line) => {
+
           const parts = line.split('|');
-          const city = (parts[0] || '').trim();
-          const normalizedStatus = (parts[1] || 'open').trim().toLowerCase();
-          const status = normalizedStatus === 'closed' ? 'closed' : 'open';
-          const cityKey = normalizeCityName(city);
+
+          const country =
+            (parts[0] || '').trim();
+
+          const city =
+            (parts[1] || '').trim();
+
+          const normalizedStatus =
+            (parts[2] || 'open')
+              .trim()
+              .toLowerCase();
+
+          const status =
+            normalizedStatus === 'closed'
+              ? 'closed'
+              : 'open';
+
+          const cityKey =
+            normalizeCityName(
+              country + '-' + city
+            );
 
           if (!city) {
             return;
           }
 
-          container.appendChild(createCard(city, status, changes[cityKey] || ''));
+          container.appendChild(
+            createCard(
+              country,
+              city,
+              status,
+              changes[cityKey] || ''
+            )
+          );
+
         });
 
         if (!container.children.length) {
-          container.innerHTML = '<div class="message">Nenhuma cidade encontrada no arquivo.</div>';
+
+          container.innerHTML =
+            '<div class="message">Nenhuma cidade encontrada.</div>';
+
         }
 
         applyFilter();
+
       } catch (error) {
+
         console.error(error);
-        container.innerHTML = '<div class="message"Atualizando lista de Areas disponiveis, por favor tente novamente em alguns minutos.</div>';
+
+        container.innerHTML =
+          '<div class="message">Atualizando lista de áreas disponíveis, tente novamente em alguns minutos.</div>';
+
       } finally {
-        const loader = document.getElementById('loader');
+
+        const loader =
+          document.getElementById('loader');
+
         setTimeout(() => {
+
           if (loader) {
+
             loader.style.opacity = '0';
+
             setTimeout(() => {
               loader.remove();
             }, 500);
+
           }
-        }, 2000);
+
+        }, 300);
+
       }
-    }
 
-    function runBasicChecks() {
-      console.assert(typeof createCard === 'function', 'createCard deve existir');
-      console.assert(typeof applyFilter === 'function', 'applyFilter deve existir');
-      console.assert(typeof parseLinesFromText === 'function', 'parseLinesFromText deve existir');
-      console.assert(typeof normalizeCityName === 'function', 'normalizeCityName deve existir');
-      console.assert(typeof buildStatusMap === 'function', 'buildStatusMap deve existir');
-      console.assert(typeof compareWithPrevious === 'function', 'compareWithPrevious deve existir');
-      console.assert(typeof normalizeCityLines === 'function', 'normalizeCityLines deve existir');
-      console.assert(typeof loadCities === 'function', 'loadCities deve existir');
-
-      const testCard = createCard('Cidade Teste', 'open', 'opened');
-      console.assert(testCard.classList.contains('card'), 'O card deve ter a classe card');
-      console.assert(testCard.dataset.status === 'open', 'O status do card deve ser open');
-      console.assert(testCard.dataset.city === 'cidade teste', 'O dataset city deve ser normalizado');
-      console.assert(normalizeCityName('São Paulo') === 'sao paulo', 'normalizeCityName deve remover acentos');
-      console.assert(testCard.querySelector('h3').textContent === 'Cidade Teste', 'O título da cidade deve ser renderizado');
-      console.assert(testCard.querySelector('.status').textContent === 'Disponível', 'O texto de status deve ser renderizado');
-      console.assert(testCard.querySelector('.change-badge').textContent === 'Abriu agora', 'O selo de mudança deve ser renderizado');
-
-      const parsedLines = parseLinesFromText('31/03/2026 12:56\nAberdeen|closed\nAbingdon|open\n');
-      console.assert(parsedLines.length === 3, 'parseLinesFromText deve manter a linha da data e as cidades');
-
-      const normalizedLines = normalizeCityLines(['31/03/2026 12:56', 'Aberdeen|closed', 'Abingdon|open']);
-      console.assert(normalizedLines.length === 2, 'normalizeCityLines deve remover linhas sem separador');
-
-      const testMap = buildStatusMap(['Aberdeen|closed', 'São Paulo|open']);
-      console.assert(testMap['aberdeen'].status === 'closed', 'buildStatusMap deve mapear closed');
-      console.assert(testMap['sao paulo'].status === 'open', 'buildStatusMap deve mapear open com nome normalizado');
-
-      const changes = compareWithPrevious(
-        {
-          aberdeen: { name: 'Aberdeen', status: 'closed' },
-          abingdon: { name: 'Abingdon', status: 'open' }
-        },
-        {
-          aberdeen: { name: 'Aberdeen', status: 'open' },
-          abingdon: { name: 'Abingdon', status: 'closed' },
-          bath: { name: 'Bath', status: 'open' }
-        }
-      );
-      console.assert(changes.aberdeen === 'opened', 'Deve detectar quando a área abriu');
-      console.assert(changes.abingdon === 'closed', 'Deve detectar quando a área fechou');
-      console.assert(changes.bath === 'new', 'Deve marcar cidade nova');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const onlyAvailable = document.getElementById('onlyAvailable');
-      const searchInput = document.getElementById('searchInput');
 
-      onlyAvailable.addEventListener('change', applyFilter);
-      searchInput.addEventListener('input', applyFilter);
+      const onlyAvailable =
+        document.getElementById('onlyAvailable');
 
-      runBasicChecks();
+      const searchInput =
+        document.getElementById('searchInput');
+
+      onlyAvailable.addEventListener(
+        'change',
+        applyFilter
+      );
+
+      searchInput.addEventListener(
+        'input',
+        applyFilter
+      );
+
+      const countryButtons =
+        document.querySelectorAll('.country-btn');
+
+      countryButtons.forEach((button) => {
+
+        button.addEventListener('click', () => {
+
+          countryButtons.forEach((btn) =>
+            btn.classList.remove('active')
+          );
+
+          button.classList.add('active');
+
+          selectedCountry =
+            button.dataset.country;
+
+          applyFilter();
+
+        });
+
+      });
+
       loadCities();
+
     });
+
   </script>
+
 </body>
 </html>
+```
