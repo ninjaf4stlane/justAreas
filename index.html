@@ -220,8 +220,8 @@
   <div class="container" id="container"></div>
 
   <script>
-   const FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt';
-const OLD_FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt';
+   const FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()}`;
+const OLD_FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt?t=${Date.now()}`;
 
     function createCard(city, status, changeType = '') {
       const card = document.createElement('div');
