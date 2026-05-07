@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Áreas Disponíveis para Registro</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <meta name="description" content="Lista atualizada de áreas disponíveis para registro">
+  <title>
+    Áreas Disponíveis para Registro
+  </title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta
+    name="description"
+    content="Lista atualizada de áreas disponíveis para registro"
+  >
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
 
   <style>
 
@@ -53,6 +75,7 @@
     }
 
     @keyframes spin {
+
       0% {
         transform: rotate(0deg);
       }
@@ -60,117 +83,243 @@
       100% {
         transform: rotate(360deg);
       }
+
     }
 
     header {
-      background: linear-gradient(90deg, #ff7a00, #ff9a3c);
+
+      background:
+        linear-gradient(
+          90deg,
+          #ff7a00,
+          #ff9a3c
+        );
+
       padding: 20px;
+
       text-align: center;
+
       color: white;
+
       font-size: 22px;
+
       font-weight: bold;
+
     }
 
     #lastUpdate {
+
       margin-top: 8px;
+
       font-size: 14px;
+
       font-weight: normal;
+
       opacity: 0.9;
-      font-family: 'Poppins', Arial, sans-serif;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    }
+
+    #availableCount {
+
+      margin-top: 6px;
+
+      font-size: 14px;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+      opacity: 0.95;
+
     }
 
     .header-controls {
+
       margin-top: 12px;
+
       font-size: 14px;
+
       font-weight: normal;
+
     }
 
     .controls-stack {
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
       gap: 10px;
+
     }
 
     #searchInput {
+
       width: 280px;
+
       max-width: 90%;
+
       padding: 10px 14px;
+
       border: none;
+
       outline: none;
+
       border-radius: 10px;
-      font-family: 'Poppins', Arial, sans-serif;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
       font-size: 14px;
+
       color: #333;
+
     }
 
     .header-controls label {
+
       display: inline-flex;
+
       align-items: center;
+
       gap: 8px;
+
       cursor: pointer;
-      font-family: 'Poppins', Arial, sans-serif;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
       font-size: 15px;
+
       letter-spacing: 0.3px;
+
     }
 
     .country-filters {
+
       display: flex;
+
       gap: 10px;
+
+      flex-wrap: wrap;
+
+      justify-content: center;
+
     }
 
     .country-btn {
+
       border: none;
+
       padding: 10px 14px;
+
       border-radius: 10px;
+
       cursor: pointer;
-      font-family: 'Poppins', Arial, sans-serif;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
       font-size: 14px;
-      background: rgba(255,255,255,0.2);
+
+      background:
+        rgba(255,255,255,0.2);
+
       color: white;
+
       transition: 0.2s ease;
+
     }
 
     .country-btn:hover {
-      background: rgba(255,255,255,0.3);
+
+      background:
+        rgba(255,255,255,0.3);
+
     }
 
     .country-btn.active {
+
       background: white;
+
       color: #ff7a00;
+
       font-weight: 600;
+
     }
 
     .container {
+
       padding: 30px;
+
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        );
+
       gap: 15px;
+
     }
 
     .card {
+
       background: white;
+
       border-radius: 18px;
+
       padding: 16px;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.06);
+
+      box-shadow:
+        0 6px 14px rgba(0,0,0,0.06);
+
       transition: all 0.2s ease;
+
     }
 
     .card:hover {
+
       transform: translateY(-4px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+
+      box-shadow:
+        0 10px 20px rgba(0,0,0,0.08);
+
     }
 
     .card h3 {
+
       color: #ff7a00;
+
       margin-bottom: 8px;
+
       font-size: 16px;
+
     }
 
     .status {
+
       font-size: 13px;
+
       margin-top: 4px;
+
       opacity: 0.9;
+
     }
 
     .open {
@@ -182,48 +331,80 @@
     }
 
     .change-badge {
+
       display: inline-block;
+
       margin-top: 6px;
+
       padding: 4px 10px;
+
       border-radius: 999px;
+
       font-size: 11px;
-      font-family: 'Poppins', Arial, sans-serif;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
       font-weight: 500;
+
       background: #f3f3f3;
+
       color: #555;
+
     }
 
     .badge-open {
+
       background: #e6fff1;
+
       color: #0a8f3c;
+
     }
 
     .badge-closed {
+
       background: #ffe6e6;
+
       color: #b30000;
+
     }
 
     .badge-new {
+
       background: #e6f0ff;
+
       color: #0057b3;
+
     }
 
     .message {
+
       padding: 30px;
+
       text-align: center;
+
       color: #777;
+
       font-size: 15px;
+
       grid-column: 1 / -1;
+
     }
 
   </style>
+
 </head>
 
 <body>
 
   <div id="loader">
+
     <div class="wheel"></div>
+
     <p>Carregando...</p>
+
   </div>
 
   <header>
@@ -231,6 +412,8 @@
     Áreas Disponíveis para Registro
 
     <div id="lastUpdate"></div>
+
+    <div id="availableCount"></div>
 
     <div class="header-controls">
 
@@ -243,8 +426,15 @@
         >
 
         <label>
-          <input type="checkbox" id="onlyAvailable" checked>
+
+          <input
+            type="checkbox"
+            id="onlyAvailable"
+            checked
+          >
+
           Mostrar apenas áreas disponíveis
+
         </label>
 
         <div class="country-filters">
@@ -253,12 +443,14 @@
             class="country-btn active"
             data-country="UK"
           >
+            🇬🇧 United Kingdom
           </button>
 
           <button
             class="country-btn"
             data-country="IE"
           >
+            🇮🇪 Ireland
           </button>
 
         </div>
@@ -269,7 +461,10 @@
 
   </header>
 
-  <div class="container" id="container"></div>
+  <div
+    class="container"
+    id="container"
+  ></div>
 
   <script>
 
@@ -284,28 +479,41 @@
     let selectedCountry = 'UK';
 
     function normalizeCityName(city) {
+
       return (city || '')
         .normalize('NFD')
         .replace(/[̀-ͯ]/g, '')
         .trim()
         .toLowerCase();
+
     }
 
-    function createCard(country, city, status, changeType = '') {
+    function createCard(
+      country,
+      city,
+      status,
+      changeType = ''
+    ) {
 
-      const card = document.createElement('div');
+      const card =
+        document.createElement('div');
 
       card.className = 'card';
 
       card.dataset.status = status;
-      card.dataset.city = normalizeCityName(city);
+
+      card.dataset.city =
+        normalizeCityName(city);
+
       card.dataset.country = country;
 
-      const title = document.createElement('h3');
+      const title =
+        document.createElement('h3');
 
       title.textContent = city;
 
-      const countryEl = document.createElement('p');
+      const countryEl =
+        document.createElement('p');
 
       countryEl.className = 'status';
 
@@ -314,9 +522,11 @@
           ? '🇬🇧 United Kingdom'
           : '🇮🇪 Ireland';
 
-      const statusEl = document.createElement('p');
+      const statusEl =
+        document.createElement('p');
 
-      statusEl.className = 'status ' + status;
+      statusEl.className =
+        'status ' + status;
 
       statusEl.textContent =
         status === 'open'
@@ -324,45 +534,115 @@
           : '🔴 Indisponível';
 
       card.appendChild(title);
+
       card.appendChild(countryEl);
+
       card.appendChild(statusEl);
 
       if (changeType) {
 
-        const badge = document.createElement('span');
+        const badge =
+          document.createElement('span');
 
-        badge.className = 'change-badge';
+        badge.className =
+          'change-badge';
 
         if (changeType === 'opened') {
 
-          badge.textContent = 'Liberado agora';
-          badge.classList.add('badge-open');
+          badge.textContent =
+            'Liberado agora';
 
-        } else if (changeType === 'closed') {
+          badge.classList.add(
+            'badge-open'
+          );
 
-          badge.textContent = '🔴 Fechou agora';
-          badge.classList.add('badge-closed');
+        }
 
-        } else if (changeType === 'new') {
+        else if (
+          changeType === 'closed'
+        ) {
 
-          badge.textContent = '🆕 Área nova';
-          badge.classList.add('badge-new');
+          badge.textContent =
+            '🔴 Fechou agora';
+
+          badge.classList.add(
+            'badge-closed'
+          );
+
+        }
+
+        else if (
+          changeType === 'new'
+        ) {
+
+          badge.textContent =
+            '🆕 Área nova';
+
+          badge.classList.add(
+            'badge-new'
+          );
 
         }
 
         card.appendChild(badge);
+
       }
 
       return card;
+
+    }
+
+    function updateAvailableCount() {
+
+      const cards =
+        document.querySelectorAll('.card');
+
+      let total = 0;
+
+      cards.forEach((card) => {
+
+        const isOpen =
+          card.dataset.status === 'open';
+
+        const country =
+          card.dataset.country;
+
+        if (
+          isOpen &&
+          country === selectedCountry
+        ) {
+
+          total++;
+
+        }
+
+      });
+
+      const countEl =
+        document.getElementById(
+          'availableCount'
+        );
+
+      if (countEl) {
+
+        countEl.textContent =
+          `🟢 ${total} áreas disponíveis`;
+
+      }
+
     }
 
     function applyFilter() {
 
       const checkbox =
-        document.getElementById('onlyAvailable');
+        document.getElementById(
+          'onlyAvailable'
+        );
 
       const searchInput =
-        document.getElementById('searchInput');
+        document.getElementById(
+          'searchInput'
+        );
 
       const cards =
         document.querySelectorAll('.card');
@@ -371,7 +651,9 @@
         checkbox.checked;
 
       const search =
-        searchInput.value.trim().toLowerCase();
+        searchInput.value
+          .trim()
+          .toLowerCase();
 
       cards.forEach((card) => {
 
@@ -385,7 +667,8 @@
           card.dataset.country || '';
 
         const matchesAvailability =
-          !showOnlyAvailable || isAvailable;
+          !showOnlyAvailable ||
+          isAvailable;
 
         const matchesSearch =
           cityName.includes(search);
@@ -402,6 +685,8 @@
 
       });
 
+      updateAvailableCount();
+
     }
 
     function parseLinesFromText(text) {
@@ -409,7 +694,9 @@
       return text
         .split('\n')
         .map((line) => line.trim())
-        .filter((line) => line.length > 0);
+        .filter(
+          (line) => line.length > 0
+        );
 
     }
 
@@ -419,7 +706,8 @@
 
       lines.forEach((line) => {
 
-        const parts = line.split('|');
+        const parts =
+          line.split('|');
 
         const country =
           (parts[0] || '').trim();
@@ -438,14 +726,20 @@
             : 'open';
 
         const cityKey =
-          normalizeCityName(country + '-' + city);
+          normalizeCityName(
+            country + '-' + city
+          );
 
         if (cityKey) {
 
           map[cityKey] = {
+
             country,
+
             name: city,
+
             status
+
           };
 
         }
@@ -453,42 +747,52 @@
       });
 
       return map;
+
     }
 
-    function compareWithPrevious(previousMap, currentMap) {
+    function compareWithPrevious(
+      previousMap,
+      currentMap
+    ) {
 
       const changes = {};
 
-      Object.keys(currentMap).forEach((cityKey) => {
+      Object.keys(currentMap)
+        .forEach((cityKey) => {
 
-        const previousItem =
-          previousMap[cityKey];
+          const previousItem =
+            previousMap[cityKey];
 
-        const currentItem =
-          currentMap[cityKey];
+          const currentItem =
+            currentMap[cityKey];
 
-        if (!previousItem) {
+          if (!previousItem) {
 
-          changes[cityKey] = 'new';
-          return;
+            changes[cityKey] = 'new';
 
-        }
+            return;
 
-        if (
-          previousItem.status === currentItem.status
-        ) {
-          return;
-        }
+          }
 
-        changes[cityKey] =
-          previousItem.status === 'closed' &&
-          currentItem.status === 'open'
-            ? 'opened'
-            : 'closed';
+          if (
+            previousItem.status ===
+            currentItem.status
+          ) {
+            return;
+          }
 
-      });
+          changes[cityKey] =
+            previousItem.status ===
+            'closed' &&
+            currentItem.status ===
+            'open'
+              ? 'opened'
+              : 'closed';
+
+        });
 
       return changes;
+
     }
 
     function normalizeCityLines(lines) {
@@ -502,32 +806,46 @@
     async function loadCities() {
 
       const container =
-        document.getElementById('container');
+        document.getElementById(
+          'container'
+        );
 
       const updateEl =
-        document.getElementById('lastUpdate');
+        document.getElementById(
+          'lastUpdate'
+        );
 
       try {
 
-        const [currentResponse, oldResponse] =
-          await Promise.all([
+        const [
+          currentResponse,
+          oldResponse
+        ] = await Promise.all([
 
-            fetch(FILE_URL, {
-              cache: 'no-store'
-            }),
+          fetch(FILE_URL, {
+            cache: 'no-store'
+          }),
 
-            fetch(OLD_FILE_URL, {
-              cache: 'no-store'
-            })
+          fetch(OLD_FILE_URL, {
+            cache: 'no-store'
+          })
 
-          ]);
+        ]);
 
         if (!currentResponse.ok) {
-          throw new Error('Erro ao carregar lista atual');
+
+          throw new Error(
+            'Erro ao carregar lista atual'
+          );
+
         }
 
         if (!oldResponse.ok) {
-          throw new Error('Erro ao carregar lista antiga');
+
+          throw new Error(
+            'Erro ao carregar lista antiga'
+          );
+
         }
 
         const currentText =
@@ -551,24 +869,33 @@
 
           updateEl.textContent =
             updateDate
-              ? 'Última atualização: ' + updateDate
+              ? 'Última atualização: ' +
+                updateDate
               : '';
 
         }
 
         const normalizedCurrentLines =
-          normalizeCityLines(currentLines);
+          normalizeCityLines(
+            currentLines
+          );
 
         const normalizedOldLines =
-          normalizeCityLines(oldLines);
+          normalizeCityLines(
+            oldLines
+          );
 
         container.innerHTML = '';
 
         const currentMap =
-          buildStatusMap(normalizedCurrentLines);
+          buildStatusMap(
+            normalizedCurrentLines
+          );
 
         const previousMap =
-          buildStatusMap(normalizedOldLines);
+          buildStatusMap(
+            normalizedOldLines
+          );
 
         const changes =
           compareWithPrevious(
@@ -576,45 +903,52 @@
             currentMap
           );
 
-        normalizedCurrentLines.forEach((line) => {
+        normalizedCurrentLines
+          .forEach((line) => {
 
-          const parts = line.split('|');
+            const parts =
+              line.split('|');
 
-          const country =
-            (parts[0] || '').trim();
+            const country =
+              (parts[0] || '')
+                .trim();
 
-          const city =
-            (parts[1] || '').trim();
+            const city =
+              (parts[1] || '')
+                .trim();
 
-          const normalizedStatus =
-            (parts[2] || 'open')
-              .trim()
-              .toLowerCase();
+            const normalizedStatus =
+              (parts[2] || 'open')
+                .trim()
+                .toLowerCase();
 
-          const status =
-            normalizedStatus === 'closed'
-              ? 'closed'
-              : 'open';
+            const status =
+              normalizedStatus ===
+              'closed'
+                ? 'closed'
+                : 'open';
 
-          const cityKey =
-            normalizeCityName(
-              country + '-' + city
+            const cityKey =
+              normalizeCityName(
+                country + '-' + city
+              );
+
+            if (!city) {
+              return;
+            }
+
+            container.appendChild(
+
+              createCard(
+                country,
+                city,
+                status,
+                changes[cityKey] || ''
+              )
+
             );
 
-          if (!city) {
-            return;
-          }
-
-          container.appendChild(
-            createCard(
-              country,
-              city,
-              status,
-              changes[cityKey] || ''
-            )
-          );
-
-        });
+          });
 
         if (!container.children.length) {
 
@@ -625,17 +959,23 @@
 
         applyFilter();
 
-      } catch (error) {
+      }
+
+      catch (error) {
 
         console.error(error);
 
         container.innerHTML =
           '<div class="message">Atualizando lista de áreas disponíveis, tente novamente em alguns minutos.</div>';
 
-      } finally {
+      }
+
+      finally {
 
         const loader =
-          document.getElementById('loader');
+          document.getElementById(
+            'loader'
+          );
 
         setTimeout(() => {
 
@@ -655,52 +995,71 @@
 
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
 
-      const onlyAvailable =
-        document.getElementById('onlyAvailable');
-
-      const searchInput =
-        document.getElementById('searchInput');
-
-      onlyAvailable.addEventListener(
-        'change',
-        applyFilter
-      );
-
-      searchInput.addEventListener(
-        'input',
-        applyFilter
-      );
-
-      const countryButtons =
-        document.querySelectorAll('.country-btn');
-
-      countryButtons.forEach((button) => {
-
-        button.addEventListener('click', () => {
-
-          countryButtons.forEach((btn) =>
-            btn.classList.remove('active')
+        const onlyAvailable =
+          document.getElementById(
+            'onlyAvailable'
           );
 
-          button.classList.add('active');
+        const searchInput =
+          document.getElementById(
+            'searchInput'
+          );
 
-          selectedCountry =
-            button.dataset.country;
+        onlyAvailable.addEventListener(
+          'change',
+          applyFilter
+        );
 
-          applyFilter();
+        searchInput.addEventListener(
+          'input',
+          applyFilter
+        );
 
-        });
+        const countryButtons =
+          document.querySelectorAll(
+            '.country-btn'
+          );
 
-      });
+        countryButtons
+          .forEach((button) => {
 
-      loadCities();
+            button.addEventListener(
+              'click',
+              () => {
 
-    });
+                countryButtons
+                  .forEach((btn) =>
+                    btn.classList.remove(
+                      'active'
+                    )
+                  );
+
+                button.classList.add(
+                  'active'
+                );
+
+                selectedCountry =
+                  button.dataset.country;
+
+                applyFilter();
+
+              }
+            );
+
+          });
+
+        loadCities();
+
+      }
+    );
 
   </script>
 
 </body>
+
 </html>
 ```
