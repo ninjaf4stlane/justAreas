@@ -365,8 +365,8 @@ const OLD_FILE_URL = 'https://raw.githubusercontent.com/ninjaf4stlane/justAreas/
         const currentLines = parseLinesFromText(currentText);
         const oldLines = parseLinesFromText(oldText);
 
-        const updateDate = currentLines.shift() || '';
-        oldLines.shift();
+        const updateDate = currentLines.pop() || '';
+        oldLines.pop();
 
         if (updateEl) {
           updateEl.textContent = updateDate ? 'Última atualização: ' + updateDate : '';
