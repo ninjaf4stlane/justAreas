@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JustAreas - Áreas do Reino Unido</title>
+  <title>Áreas Disponíveis</title>
 
-  <!-- Estilos -->
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.css)" />
+  <script src="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.js)"></script>
+
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f5f5f5;
+      background-color: #f7f7f7;
+      color: #333;
       margin: 0;
       padding: 20px;
     }
@@ -19,143 +23,138 @@
       margin-bottom: 20px;
     }
 
-    #lista {
-      background: white;
+    #areasList {
+      background: #fff;
       border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       padding: 15px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .area {
-      padding: 8px;
+    .area-item {
       border-bottom: 1px solid #eee;
+      padding: 8px 0;
     }
 
     .open { color: green; font-weight: bold; }
     .closed { color: #888; }
 
-    #map {
-      width: 100%;
-      height: 500px;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      margin-top: 20px;
-      display: none; /* inicialmente oculto */
-    }
-
     #btnMapa {
       display: block;
-      margin: 20px auto;
+      margin: 25px auto;
       background-color: #0066cc;
       color: white;
+      padding: 12px 24px;
       border: none;
       border-radius: 6px;
-      padding: 12px 24px;
       font-size: 16px;
       cursor: pointer;
       transition: 0.2s;
     }
 
     #btnMapa:hover { background-color: #004d99; }
-  </style>
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.css)" />
-  <script src="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.js)"></script>
+    #map {
+      width: 100%;
+      height: 500px;
+      max-width: 900px;
+      margin: 20px auto;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Áreas Disponíveis no Reino Unido</h1>
-
-  <div id="lista">Carregando áreas...</div>
-
+  <h1>Áreas Disponíveis para Registro</h1>
+  <div id="areasList">Carregando...</div>
   <button id="btnMapa">🗺️ Ver no Mapa</button>
   <div id="map"></div>
 
   <script>
-  // Função que carrega a lista das áreas
   async function loadAreas() {
-    const FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()}`;
+    const url = "[raw.githubusercontent.com](https://raw.githubusercontent.com/ninjaf4stlane/justAreas/main/cidades.txt?t=)" + Date.now();
     const resp = await fetch(url);
-    const text = await resp.text();
-
-    return text
-      .split("\n")
-      .filter(l => l.trim().length > 0)
-      .map(line => {
-        const [pais, nome, status] = line.split("|");
-        return { pais, nome, status };
-      });
+    if (!resp.ok) {
+      document.getElementById("areasList").innerHTML = "Erro ao carregar lista!";
+      return [];
+    }
+    const txt = await resp.text();
+    return txt.split("\n").filter(l => l.trim()).map(l => {
+      const [pais, cidade, status] = l.split("|");
+      return { pais, cidade, status };
+    });
   }
 
-  // Mostra a lista de áreas
-  async function showList() {
-    const listaDiv = document.getElementById("lista");
+  async function exibirLista() {
     const areas = await loadAreas();
-
-    listaDiv.innerHTML = "";
-    areas.forEach(area => {
+    const container = document.getElementById("areasList");
+    container.innerHTML = "";
+    if (areas.length === 0) {
+      container.textContent = "Nenhuma área carregada.";
+      return;
+    }
+    areas.forEach(a => {
       const div = document.createElement("div");
-      div.className = "area " + area.status;
-      div.textContent = `${area.nome} - ${area.status.toUpperCase()}`;
-      listaDiv.appendChild(div);
+      div.className = `area-item ${a.status}`;
+      div.textContent = `${a.cidade} - ${a.status.toUpperCase()}`;
+      container.appendChild(div);
     });
-
     return areas;
   }
 
-  // Geocodifica cidade -> coordenadas via Nominatim
   async function geocode(city) {
     try {
       const url = `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city) + ", UK")}`;
       const resp = await fetch(url, { headers: { "User-Agent": "justareas-map" }});
       const data = await resp.json();
-      if (data.length === 0) return null;
-      return { lat: data[0].lat, lon: data[0].lon };
-    } catch (e) {
-      console.error("Erro ao geocodificar:", city, e);
+      if (!data.length) return null;
+      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    } catch (err) {
+      console.error("Erro ao geocodificar:", city, err);
       return null;
     }
   }
 
-  // Cria o mapa e plota os pontos
-  async function showMap() {
+  async function mostrarMapa() {
+    const btn = document.getElementById("btnMapa");
     const mapDiv = document.getElementById("map");
+    btn.disabled = true;
+    btn.textContent = "Carregando mapa...";
     mapDiv.style.display = "block";
 
     const areas = await loadAreas();
-
     const map = L.map("map").setView([54.5, -3.0], 6);
     L.tileLayer("[{s}.tile.openstreetmap.org](https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)", {
-      attribution: "© OpenStreetMap",
+      attribution: "© OpenStreetMap"
     }).addTo(map);
 
-    for (const area of areas) {
-      const coords = await geocode(area.nome);
+    for (const a of areas) {
+      const coords = await geocode(a.cidade);
       if (!coords) continue;
 
-      const color = area.status === "open" ? "green" : "gray";
-      L.circleMarker([coords.lat, coords.lon], {
+      const color = a.status === "open" ? "green" : "gray";
+      L.circleMarker(coords, {
         radius: 8,
-        color: color,
+        color,
         fillColor: color,
-        fillOpacity: 0.6,
+        fillOpacity: 0.6
       })
         .addTo(map)
-        .bindPopup(`<b>${area.nome}</b><br>Status: ${area.status}`);
+        .bindPopup(`<b>${a.cidade}</b><br>Status: ${a.status}`);
     }
 
-    const btn = document.getElementById("btnMapa");
-    btn.disabled = true;
     btn.textContent = "Mapa carregado ✅";
   }
 
-  // Inicializa a página
-  showList();
+  // Inicializa a lista
+  exibirLista();
 
-  // Evento do botão
-  document.getElementById("btnMapa").addEventListener("click", showMap);
+  // Ação do botão
+  document.getElementById("btnMapa").addEventListener("click", mostrarMapa);
   </script>
 </body>
 </html>
