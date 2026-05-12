@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JustAreas - Áreas do Reino Unido</title>
+
+  <!-- Estilo básico -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #lista {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .area {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .open {
+      color: green;
+      font-weight: bold;
+    }
+
+    .closed {
+      color: #888;
+    }
+
+    #map {
+      width: 100%;
+      height: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+  </style>
+
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.css)"
+  />
+  <script src="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.js)"></script>
+</head>
+
+<body>
+  <h1>Áreas Disponíveis no Reino Unido</h1>
+
+  <div id="lista">Carregando áreas...</div>
+  <div id="map"></div>
+
+  <script>
+  async function loadAreas() {
+    const url = "[raw.githubusercontent.com](https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=)" + Date.now();
+    const resp = await fetch(url);
+    const text = await resp.text();
+
+    return text
+      .split("\n")
+      .filter(l => l.trim().length > 0)
+      .map(line => {
+        const [pais, nome, status] = line.split("|");
+        return { pais, nome, status };
+      });
+  }
+
+  async function geocode(city) {
+    try {
+      const url = `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city) + ", UK")}`;
+      const resp = await fetch(url, { headers: { "User-Agent": "justareas-map" }});
+      const data = await resp.json();
+      if (data.length === 0) return null;
+      return { lat: data[0].lat, lon: data[0].lon };
+    } catch (e) {
+      console.error("Erro ao geocodificar:", city, e);
+      return null;
+    }
+  }
+
+  async function init() {
+    const listaDiv = document.getElementById("lista");
+    const areas = await loadAreas();
+
+    // Mostrar lista na tela
+    listaDiv.innerHTML = "";
+    areas.forEach(area => {
+      const div = document.createElement("div");
+      div.className = "area " + area.status;
+      div.textContent = `${area.nome} - ${area.status.toUpperCase()}`;
+      listaDiv.appendChild(div);
+    });
+
+    // Criar mapa
+    const map = L.map("map").setView([54.5, -3.0], 6);
+    L.tileLayer("[{s}.tile.openstreetmap.org](https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)", {
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
+
+    // Adicionar marcadores
+    for (const area of areas) {
+      const coords = await geocode(area.nome);
+      if (!coords) continue;
+
+      const color = area.status === "open" ? "green" : "gray";
+      L.circleMarker([coords.lat, coords.lon], {
+        radius: 8,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.6,
+      })
+        .addTo(map)
+        .bindPopup(`<b>${area.nome}</b><br>Status: ${area.status}`);
+    }
+  }
+
+  init();
+  </script>
+</body>
+</html>
