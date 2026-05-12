@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Áreas Disponíveis</title>
 
-  <!-- Leaflet -->
+  <!-- Leaflet (links corretos) -->
   <link rel="stylesheet" href="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.css)" />
   <script src="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.js)"></script>
 
@@ -37,28 +37,36 @@
       padding: 8px 0;
     }
 
-    .open { color: green; font-weight: bold; }
-    .closed { color: #888; }
+    .open {
+      color: green;
+      font-weight: bold;
+    }
+
+    .closed {
+      color: #888;
+    }
 
     #btnMapa {
       display: block;
       margin: 25px auto;
-      background-color: #0066cc;
+      background-color: #0078d7;
       color: white;
-      padding: 12px 24px;
       border: none;
+      padding: 12px 24px;
       border-radius: 6px;
       font-size: 16px;
       cursor: pointer;
       transition: 0.2s;
     }
 
-    #btnMapa:hover { background-color: #004d99; }
+    #btnMapa:hover {
+      background-color: #005fa3;
+    }
 
     #map {
       width: 100%;
-      height: 500px;
       max-width: 900px;
+      height: 500px;
       margin: 20px auto;
       border-radius: 8px;
       overflow: hidden;
@@ -79,81 +87,77 @@
     const url = "[raw.githubusercontent.com](https://raw.githubusercontent.com/ninjaf4stlane/justAreas/main/cidades.txt?t=)" + Date.now();
     const resp = await fetch(url);
     if (!resp.ok) {
-      document.getElementById("areasList").innerHTML = "Erro ao carregar lista!";
+      document.getElementById("areasList").innerText = "Erro ao carregar lista.";
       return [];
     }
-    const txt = await resp.text();
-    return txt.split("\n").filter(l => l.trim()).map(l => {
-      const [pais, cidade, status] = l.split("|");
-      return { pais, cidade, status };
+    const text = await resp.text();
+    return text.split("\n").filter(l => l.trim()).map(l => {
+      const [pais, nome, status] = l.split("|");
+      return { pais, nome, status };
     });
   }
 
   async function exibirLista() {
+    const lista = document.getElementById("areasList");
     const areas = await loadAreas();
-    const container = document.getElementById("areasList");
-    container.innerHTML = "";
-    if (areas.length === 0) {
-      container.textContent = "Nenhuma área carregada.";
+    if (!areas.length) {
+      lista.textContent = "Nenhuma área encontrada.";
       return;
     }
+    lista.innerHTML = "";
     areas.forEach(a => {
-      const div = document.createElement("div");
-      div.className = `area-item ${a.status}`;
-      div.textContent = `${a.cidade} - ${a.status.toUpperCase()}`;
-      container.appendChild(div);
+      const el = document.createElement("div");
+      el.className = `area-item ${a.status}`;
+      el.textContent = `${a.nome} - ${a.status.toUpperCase()}`;
+      lista.appendChild(el);
     });
     return areas;
   }
 
-  async function geocode(city) {
+  async function geocode(nome) {
     try {
-      const url = `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city) + ", UK")}`;
-      const resp = await fetch(url, { headers: { "User-Agent": "justareas-map" }});
-      const data = await resp.json();
-      if (!data.length) return null;
-      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
-    } catch (err) {
-      console.error("Erro ao geocodificar:", city, err);
+      const url = `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(nome) + ", UK")}`;
+      const r = await fetch(url, { headers: { "User-Agent": "justareas" } });
+      const d = await r.json();
+      if (!d.length) return null;
+      return [parseFloat(d[0].lat), parseFloat(d[0].lon)];
+    } catch (e) {
+      console.error("Erro geocode", nome, e);
       return null;
     }
   }
 
   async function mostrarMapa() {
     const btn = document.getElementById("btnMapa");
-    const mapDiv = document.getElementById("map");
     btn.disabled = true;
     btn.textContent = "Carregando mapa...";
+    const areas = await loadAreas();
+    const mapDiv = document.getElementById("map");
     mapDiv.style.display = "block";
 
-    const areas = await loadAreas();
     const map = L.map("map").setView([54.5, -3.0], 6);
     L.tileLayer("[{s}.tile.openstreetmap.org](https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)", {
       attribution: "© OpenStreetMap"
     }).addTo(map);
 
     for (const a of areas) {
-      const coords = await geocode(a.cidade);
-      if (!coords) continue;
-
+      const loc = await geocode(a.nome);
+      if (!loc) continue;
       const color = a.status === "open" ? "green" : "gray";
-      L.circleMarker(coords, {
+      L.circleMarker(loc, {
         radius: 8,
         color,
         fillColor: color,
         fillOpacity: 0.6
       })
         .addTo(map)
-        .bindPopup(`<b>${a.cidade}</b><br>Status: ${a.status}`);
+        .bindPopup(`<b>${a.nome}</b><br>Status: ${a.status}`);
     }
 
     btn.textContent = "Mapa carregado ✅";
   }
 
-  // Inicializa a lista
   exibirLista();
-
-  // Ação do botão
   document.getElementById("btnMapa").addEventListener("click", mostrarMapa);
   </script>
 </body>
