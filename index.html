@@ -1,1062 +1,161 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JustAreas - Áreas do Reino Unido</title>
 
-  <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    Áreas Disponíveis para Registro
-  </title>
-
-  <meta
-    name="description"
-    content="Lista atualizada de áreas disponíveis para registro"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.googleapis.com"
-  >
-
-  <link
-    rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin
-  >
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
-    rel="stylesheet"
-  >
-
+  <!-- Estilos -->
   <style>
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      background: #fff7f0;
-      color: #333;
       font-family: Arial, sans-serif;
-    }
-
-    #loader {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100vh;
-      background: #ff7a00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      color: white;
-      z-index: 9999;
-      transition: opacity 0.5s ease;
-    }
-
-    .wheel {
-      width: 50px;
-      height: 50px;
-      border: 6px solid white;
-      border-top: 6px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 10px;
-    }
-
-    @keyframes spin {
-
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-
-    }
-
-    header {
-
-      background:
-        linear-gradient(
-          90deg,
-          #ff7a00,
-          #ff9a3c
-        );
-
+      background: #f5f5f5;
+      margin: 0;
       padding: 20px;
+    }
 
+    h1 {
       text-align: center;
-
-      color: white;
-
-      font-size: 22px;
-
-      font-weight: bold;
-
+      margin-bottom: 20px;
     }
 
-    #lastUpdate {
-
-      margin-top: 8px;
-
-      font-size: 14px;
-
-      font-weight: normal;
-
-      opacity: 0.9;
-
-      font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-    }
-
-    #availableCount {
-
-      margin-top: 6px;
-
-      font-size: 14px;
-
-      font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-      opacity: 0.95;
-
-    }
-
-    .header-controls {
-
-      margin-top: 12px;
-
-      font-size: 14px;
-
-      font-weight: normal;
-
-    }
-
-    .controls-stack {
-
-      display: flex;
-
-      flex-direction: column;
-
-      align-items: center;
-
-      gap: 10px;
-
-    }
-
-    #searchInput {
-
-      width: 280px;
-
-      max-width: 90%;
-
-      padding: 10px 14px;
-
-      border: none;
-
-      outline: none;
-
-      border-radius: 10px;
-
-      font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-      font-size: 14px;
-
-      color: #333;
-
-    }
-
-    .header-controls label {
-
-      display: inline-flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      cursor: pointer;
-
-      font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-      font-size: 15px;
-
-      letter-spacing: 0.3px;
-
-    }
-
-    .country-filters {
-
-      display: flex;
-
-      gap: 10px;
-
-      flex-wrap: wrap;
-
-      justify-content: center;
-
-    }
-
-    .country-btn {
-
-      border: none;
-
-      padding: 10px 14px;
-
-      border-radius: 10px;
-
-      cursor: pointer;
-
-      font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-      font-size: 14px;
-
-      background:
-        rgba(255,255,255,0.2);
-
-      color: white;
-
-      transition: 0.2s ease;
-
-    }
-
-    .country-btn:hover {
-
-      background:
-        rgba(255,255,255,0.3);
-
-    }
-
-    .country-btn.active {
-
+    #lista {
       background: white;
-
-      color: #ff7a00;
-
-      font-weight: 600;
-
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .container {
-
-      padding: 30px;
-
-      display: grid;
-
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(220px, 1fr)
-        );
-
-      gap: 15px;
-
+    .area {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
     }
 
-    .card {
+    .open { color: green; font-weight: bold; }
+    .closed { color: #888; }
 
-      background: white;
-
-      border-radius: 18px;
-
-      padding: 16px;
-
-      box-shadow:
-        0 6px 14px rgba(0,0,0,0.06);
-
-      transition: all 0.2s ease;
-
+    #map {
+      width: 100%;
+      height: 500px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 20px;
+      display: none; /* inicialmente oculto */
     }
 
-    .card:hover {
-
-      transform: translateY(-4px);
-
-      box-shadow:
-        0 10px 20px rgba(0,0,0,0.08);
-
-    }
-
-    .card h3 {
-
-      color: #ff7a00;
-
-      margin-bottom: 8px;
-
+    #btnMapa {
+      display: block;
+      margin: 20px auto;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 24px;
       font-size: 16px;
-
+      cursor: pointer;
+      transition: 0.2s;
     }
 
-    .status {
-
-      font-size: 13px;
-
-      margin-top: 4px;
-
-      opacity: 0.9;
-
-    }
-
-    .open {
-      color: green;
-    }
-
-    .closed {
-      color: red;
-    }
-
-    .change-badge {
-
-      display: inline-block;
-
-      margin-top: 6px;
-
-      padding: 4px 10px;
-
-      border-radius: 999px;
-
-      font-size: 11px;
-
-      font-family:
-        'Poppins',
-        Arial,
-        sans-serif;
-
-      font-weight: 500;
-
-      background: #f3f3f3;
-
-      color: #555;
-
-    }
-
-    .badge-open {
-
-      background: #e6fff1;
-
-      color: #0a8f3c;
-
-    }
-
-    .badge-closed {
-
-      background: #ffe6e6;
-
-      color: #b30000;
-
-    }
-
-    .badge-new {
-
-      background: #e6f0ff;
-
-      color: #0057b3;
-
-    }
-
-    .message {
-
-      padding: 30px;
-
-      text-align: center;
-
-      color: #777;
-
-      font-size: 15px;
-
-      grid-column: 1 / -1;
-
-    }
-
+    #btnMapa:hover { background-color: #004d99; }
   </style>
 
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.css)" />
+  <script src="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.js)"></script>
 </head>
 
 <body>
+  <h1>Áreas Disponíveis no Reino Unido</h1>
 
-  <div id="loader">
+  <div id="lista">Carregando áreas...</div>
 
-    <div class="wheel"></div>
-
-    <p>Carregando...</p>
-
-  </div>
-
-  <header>
-
-    Áreas Disponíveis para Registro
-
-    <div id="lastUpdate"></div>
-
-    <div id="availableCount"></div>
-
-    <div class="header-controls">
-
-      <div class="controls-stack">
-
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Pesquisar área..."
-        >
-
-        <label>
-
-          <input
-            type="checkbox"
-            id="onlyAvailable"
-            checked
-          >
-
-          Mostrar apenas áreas disponíveis
-
-        </label>
-
-        <div class="country-filters">
-
-          <button
-            class="country-btn active"
-            data-country="UK"
-          >
-            🇬🇧 United Kingdom
-          </button>
-
-          <button
-            class="country-btn"
-            data-country="IE"
-          >
-            🇮🇪 Ireland
-          </button>
-
-        </div>
-
-      </div>
-
-    </div>
-
-  </header>
-
-  <div
-    class="container"
-    id="container"
-  ></div>
+  <button id="btnMapa">🗺️ Ver no Mapa</button>
+  <div id="map"></div>
 
   <script>
+  // Função que carrega a lista das áreas
+  async function loadAreas() {
+    const url = "[raw.githubusercontent.com](https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=)" + Date.now();
+    const resp = await fetch(url);
+    const text = await resp.text();
 
-    const timestamp = Date.now();
-
-  const FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()}`;
-  const OLD_FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt?t=${Date.now()}`;
-
-    let selectedCountry = 'UK';
-
-    function normalizeCityName(city) {
-
-      return (city || '')
-        .normalize('NFD')
-        .replace(/[̀-ͯ]/g, '')
-        .trim()
-        .toLowerCase();
-
-    }
-
-    function createCard(
-      country,
-      city,
-      status,
-      changeType = ''
-    ) {
-
-      const card =
-        document.createElement('div');
-
-      card.className = 'card';
-
-      card.dataset.status = status;
-
-      card.dataset.city =
-        normalizeCityName(city);
-
-      card.dataset.country = country;
-
-      const title =
-        document.createElement('h3');
-
-      title.textContent = city;
-
-      const countryEl =
-        document.createElement('p');
-
-      countryEl.className = 'status';
-
-      countryEl.textContent =
-        country === 'UK'
-          ? ''
-          : '';
-
-      const statusEl =
-        document.createElement('p');
-
-      statusEl.className =
-        'status ' + status;
-
-      statusEl.textContent =
-        status === 'open'
-          ? '🟢 Disponível'
-          : '🔴 Indisponível';
-
-      card.appendChild(title);
-
-      card.appendChild(countryEl);
-
-      card.appendChild(statusEl);
-
-      if (changeType) {
-
-        const badge =
-          document.createElement('span');
-
-        badge.className =
-          'change-badge';
-
-        if (changeType === 'opened') {
-
-          badge.textContent =
-            'Liberado agora';
-
-          badge.classList.add(
-            'badge-open'
-          );
-
-        }
-
-        else if (
-          changeType === 'closed'
-        ) {
-
-          badge.textContent =
-            '🔴 Fechou agora';
-
-          badge.classList.add(
-            'badge-closed'
-          );
-
-        }
-
-        else if (
-          changeType === 'new'
-        ) {
-
-          badge.textContent =
-            '🆕 Área nova';
-
-          badge.classList.add(
-            'badge-new'
-          );
-
-        }
-
-        card.appendChild(badge);
-
-      }
-
-      return card;
-
-    }
-
-    function updateAvailableCount() {
-
-      const cards =
-        document.querySelectorAll('.card');
-
-      let total = 0;
-
-      cards.forEach((card) => {
-
-        const isOpen =
-          card.dataset.status === 'open';
-
-        const country =
-          card.dataset.country;
-
-        if (
-          isOpen &&
-          country === selectedCountry
-        ) {
-
-          total++;
-
-        }
-
+    return text
+      .split("\n")
+      .filter(l => l.trim().length > 0)
+      .map(line => {
+        const [pais, nome, status] = line.split("|");
+        return { pais, nome, status };
       });
+  }
 
-      const countEl =
-        document.getElementById(
-          'availableCount'
-        );
+  // Mostra a lista de áreas
+  async function showList() {
+    const listaDiv = document.getElementById("lista");
+    const areas = await loadAreas();
 
-      if (countEl) {
+    listaDiv.innerHTML = "";
+    areas.forEach(area => {
+      const div = document.createElement("div");
+      div.className = "area " + area.status;
+      div.textContent = `${area.nome} - ${area.status.toUpperCase()}`;
+      listaDiv.appendChild(div);
+    });
 
-        countEl.textContent =
-          `🟢 ${total} áreas disponíveis`;
+    return areas;
+  }
 
-      }
+  // Geocodifica cidade -> coordenadas via Nominatim
+  async function geocode(city) {
+    try {
+      const url = `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city) + ", UK")}`;
+      const resp = await fetch(url, { headers: { "User-Agent": "justareas-map" }});
+      const data = await resp.json();
+      if (data.length === 0) return null;
+      return { lat: data[0].lat, lon: data[0].lon };
+    } catch (e) {
+      console.error("Erro ao geocodificar:", city, e);
+      return null;
+    }
+  }
 
+  // Cria o mapa e plota os pontos
+  async function showMap() {
+    const mapDiv = document.getElementById("map");
+    mapDiv.style.display = "block";
+
+    const areas = await loadAreas();
+
+    const map = L.map("map").setView([54.5, -3.0], 6);
+    L.tileLayer("[{s}.tile.openstreetmap.org](https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)", {
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
+
+    for (const area of areas) {
+      const coords = await geocode(area.nome);
+      if (!coords) continue;
+
+      const color = area.status === "open" ? "green" : "gray";
+      L.circleMarker([coords.lat, coords.lon], {
+        radius: 8,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.6,
+      })
+        .addTo(map)
+        .bindPopup(`<b>${area.nome}</b><br>Status: ${area.status}`);
     }
 
-    function applyFilter() {
-
-      const checkbox =
-        document.getElementById(
-          'onlyAvailable'
-        );
-
-      const searchInput =
-        document.getElementById(
-          'searchInput'
-        );
-
-      const cards =
-        document.querySelectorAll('.card');
-
-      const showOnlyAvailable =
-        checkbox.checked;
-
-      const search =
-        searchInput.value
-          .trim()
-          .toLowerCase();
-
-      cards.forEach((card) => {
-
-        const isAvailable =
-          card.dataset.status === 'open';
-
-        const cityName =
-          card.dataset.city || '';
-
-        const country =
-          card.dataset.country || '';
-
-        const matchesAvailability =
-          !showOnlyAvailable ||
-          isAvailable;
-
-        const matchesSearch =
-          cityName.includes(search);
-
-        const matchesCountry =
-          country === selectedCountry;
-
-        card.style.display =
-          matchesAvailability &&
-          matchesSearch &&
-          matchesCountry
-            ? 'block'
-            : 'none';
-
-      });
-
-      updateAvailableCount();
-
-    }
-
-    function parseLinesFromText(text) {
-
-      return text
-        .split('\n')
-        .map((line) => line.trim())
-        .filter(
-          (line) => line.length > 0
-        );
-
-    }
-
-    function buildStatusMap(lines) {
-
-      const map = {};
-
-      lines.forEach((line) => {
-
-        const parts =
-          line.split('|');
-
-        const country =
-          (parts[0] || '').trim();
-
-        const city =
-          (parts[1] || '').trim();
-
-        const normalizedStatus =
-          (parts[2] || 'open')
-            .trim()
-            .toLowerCase();
-
-        const status =
-          normalizedStatus === 'closed'
-            ? 'closed'
-            : 'open';
-
-        const cityKey =
-          normalizeCityName(
-            country + '-' + city
-          );
-
-        if (cityKey) {
-
-          map[cityKey] = {
-
-            country,
-
-            name: city,
-
-            status
-
-          };
-
-        }
-
-      });
-
-      return map;
-
-    }
-
-    function compareWithPrevious(
-      previousMap,
-      currentMap
-    ) {
-
-      const changes = {};
-
-      Object.keys(currentMap)
-        .forEach((cityKey) => {
-
-          const previousItem =
-            previousMap[cityKey];
-
-          const currentItem =
-            currentMap[cityKey];
-
-          if (!previousItem) {
-
-            changes[cityKey] = 'new';
-
-            return;
-
-          }
-
-          if (
-            previousItem.status ===
-            currentItem.status
-          ) {
-            return;
-          }
-
-          changes[cityKey] =
-            previousItem.status ===
-            'closed' &&
-            currentItem.status ===
-            'open'
-              ? 'opened'
-              : 'closed';
-
-        });
-
-      return changes;
-
-    }
-
-    function normalizeCityLines(lines) {
-
-      return lines.filter(
-        (line) => line.includes('|')
-      );
-
-    }
-
-    async function loadCities() {
-
-      const container =
-        document.getElementById(
-          'container'
-        );
-
-      const updateEl =
-        document.getElementById(
-          'lastUpdate'
-        );
-
-      try {
-
-        const [
-          currentResponse,
-          oldResponse
-        ] = await Promise.all([
-
-          fetch(FILE_URL, {
-            cache: 'no-store'
-          }),
-
-          fetch(OLD_FILE_URL, {
-            cache: 'no-store'
-          })
-
-        ]);
-
-        if (!currentResponse.ok) {
-
-          throw new Error(
-            'Erro ao carregar lista atual'
-          );
-
-        }
-
-        if (!oldResponse.ok) {
-
-          throw new Error(
-            'Erro ao carregar lista antiga'
-          );
-
-        }
-
-        const currentText =
-          await currentResponse.text();
-
-        const oldText =
-          await oldResponse.text();
-
-        const currentLines =
-          parseLinesFromText(currentText);
-
-        const oldLines =
-          parseLinesFromText(oldText);
-
-        const updateDate =
-          currentLines.pop() || '';
-
-        oldLines.pop();
-
-        if (updateEl) {
-
-          updateEl.textContent =
-            updateDate
-              ? 'Última atualização: ' +
-                updateDate
-              : '';
-
-        }
-
-        const normalizedCurrentLines =
-          normalizeCityLines(
-            currentLines
-          );
-
-        const normalizedOldLines =
-          normalizeCityLines(
-            oldLines
-          );
-
-        container.innerHTML = '';
-
-        const currentMap =
-          buildStatusMap(
-            normalizedCurrentLines
-          );
-
-        const previousMap =
-          buildStatusMap(
-            normalizedOldLines
-          );
-
-        const changes =
-          compareWithPrevious(
-            previousMap,
-            currentMap
-          );
-
-        normalizedCurrentLines
-          .forEach((line) => {
-
-            const parts =
-              line.split('|');
-
-            const country =
-              (parts[0] || '')
-                .trim();
-
-            const city =
-              (parts[1] || '')
-                .trim();
-
-            const normalizedStatus =
-              (parts[2] || 'open')
-                .trim()
-                .toLowerCase();
-
-            const status =
-              normalizedStatus ===
-              'closed'
-                ? 'closed'
-                : 'open';
-
-            const cityKey =
-              normalizeCityName(
-                country + '-' + city
-              );
-
-            if (!city) {
-              return;
-            }
-
-            container.appendChild(
-
-              createCard(
-                country,
-                city,
-                status,
-                changes[cityKey] || ''
-              )
-
-            );
-
-          });
-
-        if (!container.children.length) {
-
-          container.innerHTML =
-            '<div class="message">Nenhuma cidade encontrada.</div>';
-
-        }
-
-        applyFilter();
-
-      }
-
-      catch (error) {
-
-        console.error(error);
-
-        container.innerHTML =
-          '<div class="message">Atualizando lista de áreas disponíveis, tente novamente em alguns minutos.</div>';
-
-      }
-
-      finally {
-
-        const loader =
-          document.getElementById(
-            'loader'
-          );
-
-        setTimeout(() => {
-
-          if (loader) {
-
-            loader.style.opacity = '0';
-
-            setTimeout(() => {
-              loader.remove();
-            }, 500);
-
-          }
-
-        }, 300);
-
-      }
-
-    }
-
-    document.addEventListener(
-      'DOMContentLoaded',
-      () => {
-
-        const onlyAvailable =
-          document.getElementById(
-            'onlyAvailable'
-          );
-
-        const searchInput =
-          document.getElementById(
-            'searchInput'
-          );
-
-        onlyAvailable.addEventListener(
-          'change',
-          applyFilter
-        );
-
-        searchInput.addEventListener(
-          'input',
-          applyFilter
-        );
-
-        const countryButtons =
-          document.querySelectorAll(
-            '.country-btn'
-          );
-
-        countryButtons
-          .forEach((button) => {
-
-            button.addEventListener(
-              'click',
-              () => {
-
-                countryButtons
-                  .forEach((btn) =>
-                    btn.classList.remove(
-                      'active'
-                    )
-                  );
-
-                button.classList.add(
-                  'active'
-                );
-
-                selectedCountry =
-                  button.dataset.country;
-
-                applyFilter();
-
-              }
-            );
-
-          });
-
-        loadCities();
-
-      }
-    );
-
+    const btn = document.getElementById("btnMapa");
+    btn.disabled = true;
+    btn.textContent = "Mapa carregado ✅";
+  }
+
+  // Inicializa a página
+  showList();
+
+  // Evento do botão
+  document.getElementById("btnMapa").addEventListener("click", showMap);
   </script>
-
 </body>
-
 </html>
-```
