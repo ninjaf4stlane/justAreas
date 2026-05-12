@@ -76,7 +76,7 @@
   <script>
   // Função que carrega a lista das áreas
   async function loadAreas() {
-    const url = "[raw.githubusercontent.com](https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=)" + Date.now();
+    const FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()}`;
     const resp = await fetch(url);
     const text = await resp.text();
 
