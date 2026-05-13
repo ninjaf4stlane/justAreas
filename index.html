@@ -1092,7 +1092,7 @@
   async function getCoords(city) {
     try {
       const r = await fetch(
-        `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city) + ", UK")}`,
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city) + ", UK"}`,
         { headers: { "User-Agent": "justareas" } }
       );
       const d = await r.json();
