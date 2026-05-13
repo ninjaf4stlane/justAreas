@@ -1,159 +1,1146 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Áreas Disponíveis para Registro</title>
 
-  <!-- Leaflet -->
-  <link rel="stylesheet" href="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.css)" />
-  <script src="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.js)"></script>
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>
+    Áreas Disponíveis para Registro
+  </title>
+
+  <meta
+    name="description"
+    content="Lista atualizada de áreas disponíveis para registro"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  >
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
+
+    * {
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #fff7f0;
       color: #333;
+      font-family: Arial, sans-serif;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    #lista {
-      background: white;
-      border-radius: 8px;
-      padding: 15px;
-      max-width: 600px;
-      margin: 0 auto;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .area {
-      padding: 8px 0;
-      border-bottom: 1px solid #eee;
-    }
-    .open { color: green; font-weight: bold; }
-    .closed { color: gray; }
-    #btnMapa {
-      display: block;
-      margin: 25px auto;
-      background: #0078d7;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    #btnMapa:hover { background: #005fa3; }
-    #map {
+
+    #loader {
+      position: fixed;
+      inset: 0;
       width: 100%;
-      height: 500px;
-      max-width: 900px;
-      margin: 20px auto;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: none;
+      height: 100vh;
+      background: #ff7a00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
     }
+
+    .wheel {
+      width: 50px;
+      height: 50px;
+      border: 6px solid white;
+      border-top: 6px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes spin {
+
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+
+    }
+
+    header {
+
+      background:
+        linear-gradient(
+          90deg,
+          #ff7a00,
+          #ff9a3c
+        );
+
+      padding: 20px;
+
+      text-align: center;
+
+      color: white;
+
+      font-size: 22px;
+
+      font-weight: bold;
+
+    }
+
+    #lastUpdate {
+
+      margin-top: 8px;
+
+      font-size: 14px;
+
+      font-weight: normal;
+
+      opacity: 0.9;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+    }
+
+    #availableCount {
+
+      margin-top: 6px;
+
+      font-size: 14px;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+      opacity: 0.95;
+
+    }
+
+    .header-controls {
+
+      margin-top: 12px;
+
+      font-size: 14px;
+
+      font-weight: normal;
+
+    }
+
+    .controls-stack {
+
+      display: flex;
+
+      flex-direction: column;
+
+      align-items: center;
+
+      gap: 10px;
+
+    }
+
+    #searchInput {
+
+      width: 280px;
+
+      max-width: 90%;
+
+      padding: 10px 14px;
+
+      border: none;
+
+      outline: none;
+
+      border-radius: 10px;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+      font-size: 14px;
+
+      color: #333;
+
+    }
+
+    .header-controls label {
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 8px;
+
+      cursor: pointer;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+      font-size: 15px;
+
+      letter-spacing: 0.3px;
+
+    }
+
+    .country-filters {
+
+      display: flex;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+      justify-content: center;
+
+    }
+
+    .country-btn {
+
+      border: none;
+
+      padding: 10px 14px;
+
+      border-radius: 10px;
+
+      cursor: pointer;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+      font-size: 14px;
+
+      background:
+        rgba(255,255,255,0.2);
+
+      color: white;
+
+      transition: 0.2s ease;
+
+    }
+
+    .country-btn:hover {
+
+      background:
+        rgba(255,255,255,0.3);
+
+    }
+
+    .country-btn.active {
+
+      background: white;
+
+      color: #ff7a00;
+
+      font-weight: 600;
+
+    }
+
+    .container {
+
+      padding: 30px;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fit,
+          minmax(220px, 1fr)
+        );
+
+      gap: 15px;
+
+    }
+
+    .card {
+
+      background: white;
+
+      border-radius: 18px;
+
+      padding: 16px;
+
+      box-shadow:
+        0 6px 14px rgba(0,0,0,0.06);
+
+      transition: all 0.2s ease;
+
+    }
+
+    .card:hover {
+
+      transform: translateY(-4px);
+
+      box-shadow:
+        0 10px 20px rgba(0,0,0,0.08);
+
+    }
+
+    .card h3 {
+
+      color: #ff7a00;
+
+      margin-bottom: 8px;
+
+      font-size: 16px;
+
+    }
+
+    .status {
+
+      font-size: 13px;
+
+      margin-top: 4px;
+
+      opacity: 0.9;
+
+    }
+
+    .open {
+      color: green;
+    }
+
+    .closed {
+      color: red;
+    }
+
+    .change-badge {
+
+      display: inline-block;
+
+      margin-top: 6px;
+
+      padding: 4px 10px;
+
+      border-radius: 999px;
+
+      font-size: 11px;
+
+      font-family:
+        'Poppins',
+        Arial,
+        sans-serif;
+
+      font-weight: 500;
+
+      background: #f3f3f3;
+
+      color: #555;
+
+    }
+
+    .badge-open {
+
+      background: #e6fff1;
+
+      color: #0a8f3c;
+
+    }
+
+    .badge-closed {
+
+      background: #ffe6e6;
+
+      color: #b30000;
+
+    }
+
+    .badge-new {
+
+      background: #e6f0ff;
+
+      color: #0057b3;
+
+    }
+
+    .message {
+
+      padding: 30px;
+
+      text-align: center;
+
+      color: #777;
+
+      font-size: 15px;
+
+      grid-column: 1 / -1;
+
+    }
+
   </style>
+
 </head>
 
 <body>
-  <h1>Áreas Disponíveis para Registro</h1>
-  <div id="lista">Carregando...</div>
-  <button id="btnMapa">🗺️ Ver no Mapa</button>
-  <div id="map"></div>
+
+  <div id="loader">
+
+    <div class="wheel"></div>
+
+    <p>Carregando...</p>
+
+  </div>
+
+  <header>
+
+    Áreas Disponíveis para Registro
+
+    <div id="lastUpdate"></div>
+
+    <div id="availableCount"></div>
+
+    <div class="header-controls">
+
+      <div class="controls-stack">
+
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Pesquisar área..."
+        >
+
+        <label>
+
+          <input
+            type="checkbox"
+            id="onlyAvailable"
+            checked
+          >
+
+          Mostrar apenas áreas disponíveis
+
+        </label>
+
+        <div class="country-filters">
+
+          <button
+            class="country-btn active"
+            data-country="UK"
+          >
+            🇬🇧 United Kingdom
+          </button>
+
+          <button
+            class="country-btn"
+            data-country="IE"
+          >
+            🇮🇪 Ireland
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <div
+    class="container"
+    id="container"
+  ></div>
 
   <script>
-    const FILE_URL = `[raw.githubusercontent.com](https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()})`;
 
-    async function carregarAreas() {
-      try {
-        const resp = await fetch(FILE_URL);
-        if (!resp.ok) throw new Error("Erro ao carregar lista");
-        const txt = await resp.text();
-        return txt
-          .split("\n")
-          .filter(l => l.trim().length > 0)
-          .map(l => {
-            const [pais, cidade, status] = l.split("|");
-            return { pais, cidade, status };
-          });
-      } catch (e) {
-        console.error(e);
-        document.getElementById("lista").textContent = "Erro ao carregar lista.";
-        return [];
-      }
+    const timestamp = Date.now();
+
+  const FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades.txt?t=${Date.now()}`;
+  const OLD_FILE_URL = `https://raw.githubusercontent.com/ninjaf4stlane/justAreas/refs/heads/main/cidades_old.txt?t=${Date.now()}`;
+
+    let selectedCountry = 'UK';
+
+    function normalizeCityName(city) {
+
+      return (city || '')
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .trim()
+        .toLowerCase();
+
     }
 
-    async function mostrarLista() {
-      const listaDiv = document.getElementById("lista");
-      const areas = await carregarAreas();
-      if (areas.length === 0) {
-        listaDiv.textContent = "Nenhuma área disponível.";
-        return;
+    function createCard(
+      country,
+      city,
+      status,
+      changeType = ''
+    ) {
+
+      const card =
+        document.createElement('div');
+
+      card.className = 'card';
+
+      card.dataset.status = status;
+
+      card.dataset.city =
+        normalizeCityName(city);
+
+      card.dataset.country = country;
+
+      const title =
+        document.createElement('h3');
+
+      title.textContent = city;
+
+      const countryEl =
+        document.createElement('p');
+
+      countryEl.className = 'status';
+
+      countryEl.textContent =
+        country === 'UK'
+          ? ''
+          : '';
+
+      const statusEl =
+        document.createElement('p');
+
+      statusEl.className =
+        'status ' + status;
+
+      statusEl.textContent =
+        status === 'open'
+          ? '🟢 Disponível'
+          : '🔴 Indisponível';
+
+      card.appendChild(title);
+
+      card.appendChild(countryEl);
+
+      card.appendChild(statusEl);
+
+      if (changeType) {
+
+        const badge =
+          document.createElement('span');
+
+        badge.className =
+          'change-badge';
+
+        if (changeType === 'opened') {
+
+          badge.textContent =
+            'Liberado agora';
+
+          badge.classList.add(
+            'badge-open'
+          );
+
+        }
+
+        else if (
+          changeType === 'closed'
+        ) {
+
+          badge.textContent =
+            '🔴 Fechou agora';
+
+          badge.classList.add(
+            'badge-closed'
+          );
+
+        }
+
+        else if (
+          changeType === 'new'
+        ) {
+
+          badge.textContent =
+            '🆕 Área nova';
+
+          badge.classList.add(
+            'badge-new'
+          );
+
+        }
+
+        card.appendChild(badge);
+
       }
-      listaDiv.innerHTML = "";
-      areas.forEach(area => {
-        const div = document.createElement("div");
-        div.className = "area " + area.status;
-        div.textContent = area.cidade + " - " + area.status.toUpperCase();
-        listaDiv.appendChild(div);
+
+      return card;
+
+    }
+
+    function updateAvailableCount() {
+
+      const cards =
+        document.querySelectorAll('.card');
+
+      let total = 0;
+
+      cards.forEach((card) => {
+
+        const isOpen =
+          card.dataset.status === 'open';
+
+        const country =
+          card.dataset.country;
+
+        if (
+          isOpen &&
+          country === selectedCountry
+        ) {
+
+          total++;
+
+        }
+
       });
-      return areas;
-    }
 
-    async function geocode(cidade) {
-      try {
-        const url = `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cidade) + ", UK")}`;
-        const resp = await fetch(url, { headers: { "User-Agent": "justareas" } });
-        const data = await resp.json();
-        if (!data.length) return null;
-        return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
-      } catch (e) {
-        console.error("Erro geocodificando", cidade, e);
-        return null;
+      const countEl =
+        document.getElementById(
+          'availableCount'
+        );
+
+      if (countEl) {
+
+        countEl.textContent =
+          `🟢 ${total} áreas disponíveis`;
+
       }
+
     }
 
-    async function mostrarMapa() {
-      const btn = document.getElementById("btnMapa");
-      btn.disabled = true;
-      btn.textContent = "Carregando mapa...";
+    function applyFilter() {
 
-      const areas = await carregarAreas();
-      const mapDiv = document.getElementById("map");
-      mapDiv.style.display = "block";
+      const checkbox =
+        document.getElementById(
+          'onlyAvailable'
+        );
 
-      const map = L.map("map").setView([54.5, -3.0], 6);
-      L.tileLayer("[{s}.tile.openstreetmap.org](https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)", {
-        attribution: "© OpenStreetMap"
-      }).addTo(map);
+      const searchInput =
+        document.getElementById(
+          'searchInput'
+        );
 
-      for (const area of areas) {
-        const coords = await geocode(area.cidade);
-        if (!coords) continue;
+      const cards =
+        document.querySelectorAll('.card');
 
-        const color = area.status === "open" ? "green" : "gray";
-        const popupHtml = "<b>" + area.cidade + "</b><br>Status: " + area.status;
-        L.circleMarker(coords, {
-          radius: 8,
-          color: color,
-          fillColor: color,
-          fillOpacity: 0.6
-        })
+      const showOnlyAvailable =
+        checkbox.checked;
+
+      const search =
+        searchInput.value
+          .trim()
+          .toLowerCase();
+
+      cards.forEach((card) => {
+
+        const isAvailable =
+          card.dataset.status === 'open';
+
+        const cityName =
+          card.dataset.city || '';
+
+        const country =
+          card.dataset.country || '';
+
+        const matchesAvailability =
+          !showOnlyAvailable ||
+          isAvailable;
+
+        const matchesSearch =
+          cityName.includes(search);
+
+        const matchesCountry =
+          country === selectedCountry;
+
+        card.style.display =
+          matchesAvailability &&
+          matchesSearch &&
+          matchesCountry
+            ? 'block'
+            : 'none';
+
+      });
+
+      updateAvailableCount();
+
+    }
+
+    function parseLinesFromText(text) {
+
+      return text
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(
+          (line) => line.length > 0
+        );
+
+    }
+
+    function buildStatusMap(lines) {
+
+      const map = {};
+
+      lines.forEach((line) => {
+
+        const parts =
+          line.split('|');
+
+        const country =
+          (parts[0] || '').trim();
+
+        const city =
+          (parts[1] || '').trim();
+
+        const normalizedStatus =
+          (parts[2] || 'open')
+            .trim()
+            .toLowerCase();
+
+        const status =
+          normalizedStatus === 'closed'
+            ? 'closed'
+            : 'open';
+
+        const cityKey =
+          normalizeCityName(
+            country + '-' + city
+          );
+
+        if (cityKey) {
+
+          map[cityKey] = {
+
+            country,
+
+            name: city,
+
+            status
+
+          };
+
+        }
+
+      });
+
+      return map;
+
+    }
+
+    function compareWithPrevious(
+      previousMap,
+      currentMap
+    ) {
+
+      const changes = {};
+
+      Object.keys(currentMap)
+        .forEach((cityKey) => {
+
+          const previousItem =
+            previousMap[cityKey];
+
+          const currentItem =
+            currentMap[cityKey];
+
+          if (!previousItem) {
+
+            changes[cityKey] = 'new';
+
+            return;
+
+          }
+
+          if (
+            previousItem.status ===
+            currentItem.status
+          ) {
+            return;
+          }
+
+          changes[cityKey] =
+            previousItem.status ===
+            'closed' &&
+            currentItem.status ===
+            'open'
+              ? 'opened'
+              : 'closed';
+
+        });
+
+      return changes;
+
+    }
+
+    function normalizeCityLines(lines) {
+
+      return lines.filter(
+        (line) => line.includes('|')
+      );
+
+    }
+
+    async function loadCities() {
+
+      const container =
+        document.getElementById(
+          'container'
+        );
+
+      const updateEl =
+        document.getElementById(
+          'lastUpdate'
+        );
+
+      try {
+
+        const [
+          currentResponse,
+          oldResponse
+        ] = await Promise.all([
+
+          fetch(FILE_URL, {
+            cache: 'no-store'
+          }),
+
+          fetch(OLD_FILE_URL, {
+            cache: 'no-store'
+          })
+
+        ]);
+
+        if (!currentResponse.ok) {
+
+          throw new Error(
+            'Erro ao carregar lista atual'
+          );
+
+        }
+
+        if (!oldResponse.ok) {
+
+          throw new Error(
+            'Erro ao carregar lista antiga'
+          );
+
+        }
+
+        const currentText =
+          await currentResponse.text();
+
+        const oldText =
+          await oldResponse.text();
+
+        const currentLines =
+          parseLinesFromText(currentText);
+
+        const oldLines =
+          parseLinesFromText(oldText);
+
+        const updateDate =
+          currentLines.pop() || '';
+
+        oldLines.pop();
+
+        if (updateEl) {
+
+          updateEl.textContent =
+            updateDate
+              ? 'Última atualização: ' +
+                updateDate
+              : '';
+
+        }
+
+        const normalizedCurrentLines =
+          normalizeCityLines(
+            currentLines
+          );
+
+        const normalizedOldLines =
+          normalizeCityLines(
+            oldLines
+          );
+
+        container.innerHTML = '';
+
+        const currentMap =
+          buildStatusMap(
+            normalizedCurrentLines
+          );
+
+        const previousMap =
+          buildStatusMap(
+            normalizedOldLines
+          );
+
+        const changes =
+          compareWithPrevious(
+            previousMap,
+            currentMap
+          );
+
+        normalizedCurrentLines
+          .forEach((line) => {
+
+            const parts =
+              line.split('|');
+
+            const country =
+              (parts[0] || '')
+                .trim();
+
+            const city =
+              (parts[1] || '')
+                .trim();
+
+            const normalizedStatus =
+              (parts[2] || 'open')
+                .trim()
+                .toLowerCase();
+
+            const status =
+              normalizedStatus ===
+              'closed'
+                ? 'closed'
+                : 'open';
+
+            const cityKey =
+              normalizeCityName(
+                country + '-' + city
+              );
+
+            if (!city) {
+              return;
+            }
+
+            container.appendChild(
+
+              createCard(
+                country,
+                city,
+                status,
+                changes[cityKey] || ''
+              )
+
+            );
+
+          });
+
+        if (!container.children.length) {
+
+          container.innerHTML =
+            '<div class="message">Nenhuma cidade encontrada.</div>';
+
+        }
+
+        applyFilter();
+
+      }
+
+      catch (error) {
+
+        console.error(error);
+
+        container.innerHTML =
+          '<div class="message">Atualizando lista de áreas disponíveis, tente novamente em alguns minutos.</div>';
+
+      }
+
+      finally {
+
+        const loader =
+          document.getElementById(
+            'loader'
+          );
+
+        setTimeout(() => {
+
+          if (loader) {
+
+            loader.style.opacity = '0';
+
+            setTimeout(() => {
+              loader.remove();
+            }, 500);
+
+          }
+
+        }, 300);
+
+      }
+
+    }
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+
+        const onlyAvailable =
+          document.getElementById(
+            'onlyAvailable'
+          );
+
+        const searchInput =
+          document.getElementById(
+            'searchInput'
+          );
+
+        onlyAvailable.addEventListener(
+          'change',
+          applyFilter
+        );
+
+        searchInput.addEventListener(
+          'input',
+          applyFilter
+        );
+
+        const countryButtons =
+          document.querySelectorAll(
+            '.country-btn'
+          );
+
+        countryButtons
+          .forEach((button) => {
+
+            button.addEventListener(
+              'click',
+              () => {
+
+                countryButtons
+                  .forEach((btn) =>
+                    btn.classList.remove(
+                      'active'
+                    )
+                  );
+
+                button.classList.add(
+                  'active'
+                );
+
+                selectedCountry =
+                  button.dataset.country;
+
+                applyFilter();
+
+              }
+            );
+
+          });
+
+        loadCities();
+
+      }
+    );
+
+  </script>
+<!-- Botão do mapa e área para o mapa -->
+<button id="btnMapa" style="
+  display:block;
+  margin:25px auto;
+  background:#fff;
+  border:2px solid #ff7a00;
+  color:#ff7a00;
+  padding:10px 24px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.2s;
+  font-family:'Poppins', Arial, sans-serif;
+">
+🗺️ Ver no Mapa
+</button>
+
+<div id="map" style="
+  width:100%;
+  max-width:900px;
+  height:500px;
+  margin:20px auto;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  display:none;
+"></div>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.css)" />
+<script src="[unpkg.com](https://unpkg.com/leaflet/dist/leaflet.js)"></script>
+
+<script>
+  async function getCoords(city) {
+    try {
+      const r = await fetch(
+        `[nominatim.openstreetmap.org](https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city) + ", UK")}`,
+        { headers: { "User-Agent": "justareas" } }
+      );
+      const d = await r.json();
+      if (!d.length) return null;
+      return [parseFloat(d[0].lat), parseFloat(d[0].lon)];
+    } catch {
+      return null;
+    }
+  }
+
+  async function showMap() {
+    const mapDiv = document.getElementById("map");
+    mapDiv.style.display = "block";
+    const map = L.map("map").setView([54.5, -3.0], 6);
+    L.tileLayer("[{s}.tile.openstreetmap.org](https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png)", {
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
+
+    const resp = await fetch(FILE_URL);
+    const text = await resp.text();
+    const lines = text.split("\n").filter((l) => l.trim().length > 0);
+
+    for (const line of lines) {
+      const [pais, cidade, status] = line.split("|");
+      if (pais !== "UK") continue;
+
+      const coords = await getCoords(cidade);
+      if (!coords) continue;
+
+      const color = status === "open" ? "green" : "gray";
+      const popupHtml = "<b>" + cidade + "</b><br>Status: " + status;
+
+      L.circleMarker(coords, {
+        radius: 8,
+        color: color,
+        fillColor: color,
+        fillOpacity: 0.6,
+      })
         .addTo(map)
         .bindPopup(popupHtml);
-      }
-
-      btn.textContent = "Mapa carregado ✅";
     }
+  }
 
-    mostrarLista();
-    document.getElementById("btnMapa").addEventListener("click", mostrarMapa);
-  </script>
+  document
+    .getElementById("btnMapa")
+    .addEventListener("click", showMap);
+</script>
+
 </body>
+
 </html>
